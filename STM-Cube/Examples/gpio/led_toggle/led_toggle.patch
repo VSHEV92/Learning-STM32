@@ -1,0 +1,22 @@
+diff --git a/led_toggle/Core/Src/main.c b/led_toggle/Core/Src/main.c
+index add7278..a27d0d5 100644
+--- a/led_toggle/Core/Src/main.c
++++ b/led_toggle/Core/Src/main.c
+@@ -31,7 +31,7 @@
+ 
+ /* Private define ------------------------------------------------------------*/
+ /* USER CODE BEGIN PD */
+-
++#define TOGGLE_DELAY 200
+ /* USER CODE END PD */
+ 
+ /* Private macro -------------------------------------------------------------*/
+@@ -94,6 +94,8 @@ int main(void)
+   /* USER CODE BEGIN WHILE */
+   while (1)
+   {
++	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
++	HAL_Delay(TOGGLE_DELAY);
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */
