@@ -1,0 +1,16 @@
+diff --git a/button_led/Core/Src/main.c b/button_led/Core/Src/main.c
+index 9a27fa3..7f8022e 100644
+--- a/button_led/Core/Src/main.c
++++ b/button_led/Core/Src/main.c
+@@ -92,8 +92,11 @@ int main(void)
+ 
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
++  uint32_t button_value;
+   while (1)
+   {
++	button_value = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
++	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, !button_value);
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */
