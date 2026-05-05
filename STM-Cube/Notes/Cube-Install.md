@@ -1,4 +1,4 @@
-# STM Cude Install
+# STM Cube Install
 
 ------
 
@@ -67,4 +67,22 @@
 
    
 
+   ------
+   
+   ## CubeProgrammer Install
+   
+   1. Download Cube MX from STM [website](https://www.st.com/en/development-tools/stm32cubeprog.html)
+   
+   2. Unzip archive and run shell script:
+   
+      ```
+      # unzip 
+      unzip <stm32-cube-programmer>.zip
+      
+      # run intalation script
+      ./<stm32-cube-programmer-setup-script> 
+      ```
+   
+   3. Agree licenses and choose installation directory
+   
    
