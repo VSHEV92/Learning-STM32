@@ -1,18 +1,30 @@
 
-# check that .ioc file is set
-ifeq ($(IOC_FILE),)
-$(error Please, set IOC_FILE variable to CubeMX .ioc file)
+# check that example variable is set
+ifeq ($(example),)
+$(error Please, set "example" variable)
 endif
 
-
-PROJECT_NAME := $(patsubst %.ioc,%,$(notdir $(IOC_FILE)))
-PROJECT_DIR := $(abspath $(dir $(IOC_FILE)))
+PROJECT_NAME := $(notdir $(example))
+PROJECT_DIR := $(abspath $(example))
 PROJECT_SCRIPT := project_script.txt
+
+IOC_FILE := $(abspath $(example)/$(PROJECT_NAME).ioc)
+
+# check that .ioc file is set
+ifeq ($(IOC_FILE),)
+$(error .ioc file not exist under $(example) folder)
+endif
 
 PATCH_FILE := $(PROJECT_DIR)/$(PROJECT_NAME).patch
 CUBE_PROJECT_PATH := $(PROJECT_DIR)/cube_project
 
-all: clean create_project
+CUBE_BUILD_OPTS += -nosplash 
+CUBE_BUILD_OPTS += -application org.eclipse.cdt.managedbuilder.core.headlessbuild
+CUBE_BUILD_OPTS += -data $(CUBE_PROJECT_PATH)
+CUBE_BUILD_OPTS += -import $(CUBE_PROJECT_PATH)/$(PROJECT_NAME)
+CUBE_BUILD_OPTS += -build $(PROJECT_NAME)/Release
+
+all: clean create_project build_project program_project
 
 
 create_project: $(PROJECT_SCRIPT)
@@ -29,6 +41,15 @@ ifneq ("$(wildcard $(PATCH_FILE))","")
 endif
 
 
+build_project:
+	stm32cubeide $(CUBE_BUILD_OPTS)
+
+
+program_project:
+	STM32_Programmer_CLI -c port=SWD -w $(CUBE_PROJECT_PATH)/$(PROJECT_NAME)/Release/$(PROJECT_NAME).elf 
+	STM32_Programmer_CLI -c port=SWD -rst
+
+
 .ONESHELL:
 $(PROJECT_SCRIPT):
 	cat <<EOF > $(PROJECT_DIR)/$(PROJECT_SCRIPT)
@@ -38,7 +59,7 @@ $(PROJECT_SCRIPT):
 	exit
 	EOF
 
-# create patch file for origin CubeMX file update 
+
 create_patch:
 	cd $(CUBE_PROJECT_PATH);                        \
 	git restore $(PROJECT_NAME)/.cproject;          \
@@ -49,7 +70,8 @@ clean:
 	rm -rf $(PROJECT_DIR)/$(PROJECT_SCRIPT)
 	rm -rf $(CUBE_PROJECT_PATH)
 
-.PHONY: create_project clean
+
+.PHONY: create_project build_project program_project clean
 
 
 
