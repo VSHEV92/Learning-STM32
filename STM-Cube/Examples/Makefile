@@ -62,7 +62,6 @@ $(PROJECT_SCRIPT):
 
 create_patch:
 	cd $(CUBE_PROJECT_PATH);                        \
-	git restore $(PROJECT_NAME)/.cproject;          \
 	git diff > $(PATCH_FILE)
 
 
