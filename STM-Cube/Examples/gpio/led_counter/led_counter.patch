@@ -1,0 +1,36 @@
+diff --git a/led_counter/Core/Src/main.c b/led_counter/Core/Src/main.c
+index fc1c4b7..9c6f4c7 100644
+--- a/led_counter/Core/Src/main.c
++++ b/led_counter/Core/Src/main.c
+@@ -31,7 +31,7 @@
+ 
+ /* Private define ------------------------------------------------------------*/
+ /* USER CODE BEGIN PD */
+-
++#define INCREMENT_DELAY 200
+ /* USER CODE END PD */
+ 
+ /* Private macro -------------------------------------------------------------*/
+@@ -65,7 +65,7 @@ int main(void)
+ {
+ 
+   /* USER CODE BEGIN 1 */
+-
++  uint32_t counter = 0;
+   /* USER CODE END 1 */
+ 
+   /* MCU Configuration--------------------------------------------------------*/
+@@ -94,6 +94,13 @@ int main(void)
+   /* USER CODE BEGIN WHILE */
+   while (1)
+   {
++	HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, !((counter >> 0) & 0x1) );
++	HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, !((counter >> 1) & 0x1) );
++	HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, !((counter >> 2) & 0x1) );
++	HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, !((counter >> 3) & 0x1) );
++
++	HAL_Delay(INCREMENT_DELAY);
++	counter++;
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */
