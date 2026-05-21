@@ -1,0 +1,43 @@
+diff --git a/uart_tx/Core/Src/main.c b/uart_tx/Core/Src/main.c
+index e3239ff..d288bda 100644
+--- a/uart_tx/Core/Src/main.c
++++ b/uart_tx/Core/Src/main.c
+@@ -21,7 +21,8 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include <string.h>
++#include <stdio.h>
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -41,7 +42,6 @@
+ 
+ /* Private variables ---------------------------------------------------------*/
+ UART_HandleTypeDef huart2;
+-
+ /* USER CODE BEGIN PV */
+ 
+ /* USER CODE END PV */
+@@ -90,13 +90,19 @@ int main(void)
+   MX_GPIO_Init();
+   MX_USART2_UART_Init();
+   /* USER CODE BEGIN 2 */
+-
++  uint8_t cntr = 0;
++  char msg[30];
+   /* USER CODE END 2 */
+ 
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
+   while (1)
+   {
++    sprintf(msg, "Counter value: %3d\n", cntr);
++    cntr++;
++
++    HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
++    HAL_Delay(100);
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */
