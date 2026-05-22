@@ -1,0 +1,45 @@
+diff --git a/uart_tx_it/Core/Src/main.c b/uart_tx_it/Core/Src/main.c
+index 7395b87..e87db61 100644
+--- a/uart_tx_it/Core/Src/main.c
++++ b/uart_tx_it/Core/Src/main.c
+@@ -21,7 +21,8 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include <string.h>
++#include <stdio.h>
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -57,6 +58,9 @@ static void MX_USART2_UART_Init(void);
+ /* Private user code ---------------------------------------------------------*/
+ /* USER CODE BEGIN 0 */
+ 
++void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
++    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
++}
+ /* USER CODE END 0 */
+ 
+ /**
+@@ -90,13 +94,19 @@ int main(void)
+   MX_GPIO_Init();
+   MX_USART2_UART_Init();
+   /* USER CODE BEGIN 2 */
+-
++  uint8_t cntr = 0;
++  char msg[30];
+   /* USER CODE END 2 */
+ 
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
+   while (1)
+   {
++    sprintf(msg, "Counter value: %3d\n", cntr);
++    cntr++;
++
++    HAL_UART_Transmit_IT(&huart2, (uint8_t*)msg, strlen(msg));
++    HAL_Delay(300);
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */
