@@ -16,6 +16,7 @@ $(error .ioc file not exist under $(example) folder)
 endif
 
 PATCH_FILE := $(PROJECT_DIR)/$(PROJECT_NAME).patch
+SRC_DIR := $(PROJECT_DIR)/src
 CUBE_PROJECT_PATH := $(PROJECT_DIR)/cube_project
 
 CUBE_BUILD_OPTS += -nosplash 
@@ -38,6 +39,10 @@ create_project: $(PROJECT_SCRIPT)
 ifneq ("$(wildcard $(PATCH_FILE))","")
 	cd $(CUBE_PROJECT_PATH);    \
 	git apply $(PATCH_FILE)
+endif
+
+ifneq ("$(wildcard $(SRC_DIR))","")
+	cp -r $(SRC_DIR)/* $(CUBE_PROJECT_PATH)/$(PROJECT_NAME)/Core
 endif
 
 

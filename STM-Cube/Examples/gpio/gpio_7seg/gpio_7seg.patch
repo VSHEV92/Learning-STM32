@@ -1,0 +1,42 @@
+diff --git a/gpio_7seg/Core/Src/main.c b/gpio_7seg/Core/Src/main.c
+index dc4be05..60fd5d9 100644
+--- a/gpio_7seg/Core/Src/main.c
++++ b/gpio_7seg/Core/Src/main.c
+@@ -21,7 +21,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "74HC595.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -87,13 +87,27 @@ int main(void)
+   /* Initialize all configured peripherals */
+   MX_GPIO_Init();
+   /* USER CODE BEGIN 2 */
+-
++  
++  // BEAF Word
++  unsigned char data_7seg[4][2] = {
++        { 0x01, ~(0x7F) },
++        { 0x02, ~(0x79) },
++        { 0x04, ~(0x77) },
++        { 0x08, ~(0x71) },
++  };
++
++  
+   /* USER CODE END 2 */
+ 
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
+   while (1)
+   {
++    for(int i = 0; i < 4; i++) {
++      shiftRegisters[0] = data_7seg[i][0];
++      shiftRegisters[1] = data_7seg[i][1];
++      ShiftRegister74HC595_update();
++    }
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */
