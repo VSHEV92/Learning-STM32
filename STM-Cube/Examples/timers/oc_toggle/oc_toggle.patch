@@ -1,0 +1,13 @@
+diff --git a/oc_toggle/Core/Src/main.c b/oc_toggle/Core/Src/main.c
+index c03f1ee..2675570 100644
+--- a/oc_toggle/Core/Src/main.c
++++ b/oc_toggle/Core/Src/main.c
+@@ -90,7 +90,7 @@ int main(void)
+   MX_GPIO_Init();
+   MX_TIM2_Init();
+   /* USER CODE BEGIN 2 */
+-
++  HAL_TIM_OC_Start(&htim2, TIM_CHANNEL_1);
+   /* USER CODE END 2 */
+ 
+   /* Infinite loop */
