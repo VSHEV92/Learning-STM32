@@ -1,0 +1,48 @@
+diff --git a/ic_uart/Core/Src/main.c b/ic_uart/Core/Src/main.c
+index b9e62ac..4c84ab1 100644
+--- a/ic_uart/Core/Src/main.c
++++ b/ic_uart/Core/Src/main.c
+@@ -21,7 +21,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "stdio.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -59,7 +59,17 @@ static void MX_USART2_UART_Init(void);
+ 
+ /* Private user code ---------------------------------------------------------*/
+ /* USER CODE BEGIN 0 */
++int __io_putchar(int ch) {
++  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
++  return ch;
++}
+ 
++void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
++  if (htim == &htim2) {
++    uint32_t captured_value = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2);
++    printf("Captured value is %ld\n", captured_value);
++  }
++}
+ /* USER CODE END 0 */
+ 
+ /**
+@@ -68,7 +78,6 @@ static void MX_USART2_UART_Init(void);
+   */
+ int main(void)
+ {
+-
+   /* USER CODE BEGIN 1 */
+ 
+   /* USER CODE END 1 */
+@@ -99,6 +108,8 @@ int main(void)
+ 
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
++  HAL_TIM_IC_Start_IT(&htim2, TIM_CHANNEL_2);
++
+   while (1)
+   {
+     /* USER CODE END WHILE */
