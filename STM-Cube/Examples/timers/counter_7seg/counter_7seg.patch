@@ -1,0 +1,78 @@
+diff --git a/counter_7seg/Core/Src/main.c b/counter_7seg/Core/Src/main.c
+index b80008b..a2ec58e 100644
+--- a/counter_7seg/Core/Src/main.c
++++ b/counter_7seg/Core/Src/main.c
+@@ -21,7 +21,8 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "74HC595.h"
++#include "stdio.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -58,6 +59,53 @@ static void MX_TIM3_Init(void);
+ 
+ /* Private user code ---------------------------------------------------------*/
+ /* USER CODE BEGIN 0 */
++uint32_t segment = 0;
++uint32_t counter = 0;
++
++unsigned char data_7seg[4] = { ~(0x3F), ~(0x3F), ~(0x3F), ~(0x3F) };
++
++unsigned char digit_to_7seg(char digit) {
++	switch(digit) {
++	  case '0': return ~(0x3F);
++	  case '1': return ~(0x06);
++	  case '2': return ~(0x5b);
++	  case '3': return ~(0x4F);
++	  case '4': return ~(0x66);
++	  case '5': return ~(0x6d);
++	  case '6': return ~(0x7d);
++	  case '7': return ~(0x07);
++	  case '8': return ~(0x7F);
++	  case '9': return ~(0x6F);
++	}
++	return 0;
++}
++
++
++void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
++
++  if (htim == &htim2) {
++	  shiftRegisters[0] = (1 << segment);
++	  shiftRegisters[1] = data_7seg[segment];
++	  ShiftRegister74HC595_update();
++
++	  segment = (segment + 1) % 4;
++  }
++
++  if (htim == &htim3) {
++
++	counter = (counter + 1) % 10000;
++
++    char counter_string[5];
++
++    snprintf(counter_string, sizeof(counter_string), "%04u", (unsigned int)counter);
++
++    for (int i = 0; i < 4; i++) {
++    	data_7seg[i] = digit_to_7seg(counter_string[i]);
++    }
++
++  }
++
++}
+ 
+ /* USER CODE END 0 */
+ 
+@@ -98,6 +146,9 @@ int main(void)
+ 
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
++  HAL_TIM_Base_Start_IT(&htim2);
++  HAL_TIM_Base_Start_IT(&htim3);
++
+   while (1)
+   {
+     /* USER CODE END WHILE */
