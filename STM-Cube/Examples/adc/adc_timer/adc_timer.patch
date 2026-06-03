@@ -1,0 +1,50 @@
+diff --git a/adc_timer/.cproject b/adc_timer/.cproject
+index be0fe7b..c8e55dc 100644
+--- a/adc_timer/.cproject
++++ b/adc_timer/.cproject
+@@ -172,4 +172,5 @@
+ 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+ 		</scannerConfigBuildInfo>
+ 	</storageModule>
++	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+ </cproject>
+\ No newline at end of file
+diff --git a/adc_timer/Core/Src/main.c b/adc_timer/Core/Src/main.c
+index c3f1cee..f94b3b1 100644
+--- a/adc_timer/Core/Src/main.c
++++ b/adc_timer/Core/Src/main.c
+@@ -21,7 +21,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "stdio.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -62,6 +62,15 @@ static void MX_USART2_UART_Init(void);
+ 
+ /* Private user code ---------------------------------------------------------*/
+ /* USER CODE BEGIN 0 */
++int __io_putchar(int ch) {
++  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
++  return ch;
++}
++
++void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
++  uint16_t adc_data = HAL_ADC_GetValue(&hadc1);
++  printf("ADC Data: %u\n", (unsigned int)adc_data);
++}
+ 
+ /* USER CODE END 0 */
+ 
+@@ -98,7 +107,8 @@ int main(void)
+   MX_TIM2_Init();
+   MX_USART2_UART_Init();
+   /* USER CODE BEGIN 2 */
+-
++  HAL_ADC_Start_IT(&hadc1);
++  HAL_TIM_Base_Start(&htim2);
+   /* USER CODE END 2 */
+ 
+   /* Infinite loop */
