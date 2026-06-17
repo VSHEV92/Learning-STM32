@@ -1,0 +1,91 @@
+diff --git a/eeprom_seq_interrupt/Core/Src/main.c b/eeprom_seq_interrupt/Core/Src/main.c
+index 7dbabb2..b61488d 100644
+--- a/eeprom_seq_interrupt/Core/Src/main.c
++++ b/eeprom_seq_interrupt/Core/Src/main.c
+@@ -21,7 +21,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "stdio.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -31,7 +31,8 @@
+ 
+ /* Private define ------------------------------------------------------------*/
+ /* USER CODE BEGIN PD */
+-
++#define EEPROM_ADDR 0xA0
++#define COUNTER_ADDR 0x00
+ /* USER CODE END PD */
+ 
+ /* Private macro -------------------------------------------------------------*/
+@@ -45,7 +46,8 @@ I2C_HandleTypeDef hi2c1;
+ UART_HandleTypeDef huart2;
+ 
+ /* USER CODE BEGIN PV */
+-
++volatile uint32_t tx_completed = 0;
++volatile uint32_t rx_completed = 0;
+ /* USER CODE END PV */
+ 
+ /* Private function prototypes -----------------------------------------------*/
+@@ -54,7 +56,18 @@ static void MX_GPIO_Init(void);
+ static void MX_I2C1_Init(void);
+ static void MX_USART2_UART_Init(void);
+ /* USER CODE BEGIN PFP */
++int __io_putchar(int ch) {
++  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
++  return ch;
++}
+ 
++void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c) {
++	tx_completed = 1;
++}
++
++void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c) {
++	rx_completed = 1;
++}
+ /* USER CODE END PFP */
+ 
+ /* Private user code ---------------------------------------------------------*/
+@@ -94,13 +107,37 @@ int main(void)
+   MX_I2C1_Init();
+   MX_USART2_UART_Init();
+   /* USER CODE BEGIN 2 */
+-
++  uint8_t counter;
++  uint8_t tx_data[2] = {COUNTER_ADDR, 0};
+   /* USER CODE END 2 */
+ 
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
+   while (1)
+   {
++    // set address inside EEPROM
++	HAL_I2C_Master_Seq_Transmit_IT(&hi2c1, EEPROM_ADDR, tx_data, 1, I2C_FIRST_FRAME);
++
++	while(!tx_completed){}
++	tx_completed = 0;
++
++	// read counter value
++	HAL_I2C_Master_Seq_Receive_IT(&hi2c1, EEPROM_ADDR, &counter, 1, I2C_OTHER_AND_LAST_FRAME);
++
++	while(!rx_completed){}
++	rx_completed = 0;
++
++	printf("Counter value from EEPROM: %d\n", (int)counter);
++
++	// incremetn counter and write it back
++	tx_data[1] = ++counter;
++	HAL_I2C_Master_Transmit_IT(&hi2c1, EEPROM_ADDR, tx_data, 2);
++
++	 while(!tx_completed){}
++	 tx_completed = 0;
++
++	 // wait 1 second and start again
++	 HAL_Delay(1000);
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */
