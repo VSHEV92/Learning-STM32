@@ -1,0 +1,57 @@
+diff --git a/max7219_hart/Core/Src/main.c b/max7219_hart/Core/Src/main.c
+index 05155ff..b334c59 100644
+--- a/max7219_hart/Core/Src/main.c
++++ b/max7219_hart/Core/Src/main.c
+@@ -21,7 +21,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "max7219.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -56,7 +56,16 @@ static void MX_SPI1_Init(void);
+ 
+ /* Private user code ---------------------------------------------------------*/
+ /* USER CODE BEGIN 0 */
+-
++uint8_t max7219_data[] = {
++    0b00000000,
++    0b01101100,
++    0b11111110,
++    0b11111110,
++    0b01111100,
++    0b00111000,
++    0b00010000,
++    0b00000000
++};
+ /* USER CODE END 0 */
+ 
+ /**
+@@ -90,13 +99,24 @@ int main(void)
+   MX_GPIO_Init();
+   MX_SPI1_Init();
+   /* USER CODE BEGIN 2 */
+-
++  max7219_Init();
++  max7219_SendData(REG_DISPLAY_TEST, 0x0);
+   /* USER CODE END 2 */
++  for (int i = 0; i < 8; i++) {
++	  max7219_SendData(i+1, max7219_data[i]);
++  }
++
++  uint8_t intensity = 0;
++  max7219_SetIntensivity(intensity);
++  max7219_TurnOn();
+ 
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
+   while (1)
+   {
++	HAL_Delay(1500/16);
++	intensity = (intensity + 1) % 16;
++	max7219_SetIntensivity(intensity);
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */

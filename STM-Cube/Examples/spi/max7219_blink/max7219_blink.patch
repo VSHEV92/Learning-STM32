@@ -1,14 +1,3 @@
-diff --git a/max7219_blink/.cproject b/max7219_blink/.cproject
-index b977ef4..6ca0eff 100644
---- a/max7219_blink/.cproject
-+++ b/max7219_blink/.cproject
-@@ -172,4 +172,5 @@
- 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
- 		</scannerConfigBuildInfo>
- 	</storageModule>
-+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
- </cproject>
-\ No newline at end of file
 diff --git a/max7219_blink/Core/Src/main.c b/max7219_blink/Core/Src/main.c
 index 05155ff..78ddffe 100644
 --- a/max7219_blink/Core/Src/main.c
