@@ -1,0 +1,44 @@
+diff --git a/max7219_blink/.cproject b/max7219_blink/.cproject
+index b977ef4..6ca0eff 100644
+--- a/max7219_blink/.cproject
++++ b/max7219_blink/.cproject
+@@ -172,4 +172,5 @@
+ 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
+ 		</scannerConfigBuildInfo>
+ 	</storageModule>
++	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+ </cproject>
+\ No newline at end of file
+diff --git a/max7219_blink/Core/Src/main.c b/max7219_blink/Core/Src/main.c
+index 05155ff..78ddffe 100644
+--- a/max7219_blink/Core/Src/main.c
++++ b/max7219_blink/Core/Src/main.c
+@@ -21,7 +21,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "max7219.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -90,13 +90,18 @@ int main(void)
+   MX_GPIO_Init();
+   MX_SPI1_Init();
+   /* USER CODE BEGIN 2 */
+-
++  max7219_Init();
+   /* USER CODE END 2 */
+ 
+   /* Infinite loop */
+   /* USER CODE BEGIN WHILE */
+   while (1)
+   {
++	max7219_SendData(REG_DISPLAY_TEST, 0x1);
++	HAL_Delay(500);
++
++	max7219_SendData(REG_DISPLAY_TEST, 0x0);
++	HAL_Delay(500);
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */
