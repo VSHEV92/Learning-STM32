@@ -1,0 +1,39 @@
+diff --git a/wwdt_interrupt/Core/Src/main.c b/wwdt_interrupt/Core/Src/main.c
+index 37dd25b..4560fd4 100644
+--- a/wwdt_interrupt/Core/Src/main.c
++++ b/wwdt_interrupt/Core/Src/main.c
+@@ -18,7 +18,7 @@
+ /* USER CODE END Header */
+ /* Includes ------------------------------------------------------------------*/
+ #include "main.h"
+-
++#include "stdio.h"
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+ 
+@@ -54,7 +54,15 @@ static void MX_GPIO_Init(void);
+ static void MX_USART2_UART_Init(void);
+ static void MX_WWDG_Init(void);
+ /* USER CODE BEGIN PFP */
++int __io_putchar(int ch) {
++  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
++  return ch;
++}
+ 
++void HAL_WWDG_EarlyWakeupCallback(WWDG_HandleTypeDef *hwwdg) {
++	HAL_WWDG_Refresh(hwwdg);
++	printf("Refresh WWDT from ISR\n");
++}
+ /* USER CODE END PFP */
+ 
+ /* Private user code ---------------------------------------------------------*/
+@@ -94,7 +102,8 @@ int main(void)
+   MX_USART2_UART_Init();
+   MX_WWDG_Init();
+   /* USER CODE BEGIN 2 */
+-
++  printf("Application started!\n");
++  printf("WWDT enabled. Period 2 seconds, window 1 second\n");
+   /* USER CODE END 2 */
+ 
+   /* Infinite loop */

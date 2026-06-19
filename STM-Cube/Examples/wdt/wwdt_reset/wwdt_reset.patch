@@ -1,0 +1,47 @@
+diff --git a/wwdt_reset/Core/Src/main.c b/wwdt_reset/Core/Src/main.c
+index 37dd25b..19208fe 100644
+--- a/wwdt_reset/Core/Src/main.c
++++ b/wwdt_reset/Core/Src/main.c
+@@ -21,7 +21,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "stdio.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -54,6 +54,10 @@ static void MX_GPIO_Init(void);
+ static void MX_USART2_UART_Init(void);
+ static void MX_WWDG_Init(void);
+ /* USER CODE BEGIN PFP */
++int __io_putchar(int ch) {
++  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
++  return ch;
++}
+ 
+ /* USER CODE END PFP */
+ 
+@@ -94,7 +98,22 @@ int main(void)
+   MX_USART2_UART_Init();
+   MX_WWDG_Init();
+   /* USER CODE BEGIN 2 */
++  printf("Application started!\n");
++  printf("WWDT enabled. Period 2 seconds, window 1 second\n");
++
++  printf("Wait 1 second and refresh WWDT\n");
++  HAL_Delay(1000);
++  HAL_WWDG_Refresh(&hwwdg);
++
++  printf("Wait another 1 second and refresh WWDT again\n");
++  HAL_Delay(1000);
++  HAL_WWDG_Refresh(&hwwdg);
++
++  printf("Wait 300 msec and refresh WWDT to early\n");
++  HAL_Delay(300);
++  HAL_WWDG_Refresh(&hwwdg);
+ 
++  printf("Never get here\n");
+   /* USER CODE END 2 */
+ 
+   /* Infinite loop */
