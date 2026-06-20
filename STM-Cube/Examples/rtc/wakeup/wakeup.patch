@@ -1,0 +1,28 @@
+diff --git a/wakeup/Core/Src/main.c b/wakeup/Core/Src/main.c
+index 006e3b7..4eeed87 100644
+--- a/wakeup/Core/Src/main.c
++++ b/wakeup/Core/Src/main.c
+@@ -21,7 +21,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "stdio.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -54,7 +54,14 @@ static void MX_GPIO_Init(void);
+ static void MX_RTC_Init(void);
+ static void MX_USART2_UART_Init(void);
+ /* USER CODE BEGIN PFP */
++int __io_putchar(int ch) {
++  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
++  return ch;
++}
+ 
++void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc) {
++  printf("Wake Up interrupt triggered\n");
++}
+ /* USER CODE END PFP */
+ 
+ /* Private user code ---------------------------------------------------------*/
