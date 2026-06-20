@@ -1,0 +1,48 @@
+diff --git a/rtc/Core/Src/main.c b/rtc/Core/Src/main.c
+index ac95a39..dbc9dff 100644
+--- a/rtc/Core/Src/main.c
++++ b/rtc/Core/Src/main.c
+@@ -21,7 +21,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "stdio.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -54,7 +54,14 @@ static void MX_GPIO_Init(void);
+ static void MX_RTC_Init(void);
+ static void MX_USART2_UART_Init(void);
+ /* USER CODE BEGIN PFP */
++int __io_putchar(int ch) {
++  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
++  return ch;
++}
+ 
++void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
++  printf("Alarm callback is triggered\n");
++}
+ /* USER CODE END PFP */
+ 
+ /* Private user code ---------------------------------------------------------*/
+@@ -94,6 +101,8 @@ int main(void)
+   MX_RTC_Init();
+   MX_USART2_UART_Init();
+   /* USER CODE BEGIN 2 */
++  RTC_TimeTypeDef rtc_time;
++  RTC_DateTypeDef trc_date;
+ 
+   /* USER CODE END 2 */
+ 
+@@ -101,6 +110,10 @@ int main(void)
+   /* USER CODE BEGIN WHILE */
+   while (1)
+   {
++	HAL_RTC_GetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
++	HAL_RTC_GetDate(&hrtc, &trc_date, RTC_FORMAT_BIN);
++	printf("Time is %02u:%02u:%02u\n", (unsigned int)rtc_time.Hours, (unsigned int)rtc_time.Minutes, (unsigned int)rtc_time.Seconds);
++	HAL_Delay(1000);
+     /* USER CODE END WHILE */
+ 
+     /* USER CODE BEGIN 3 */
