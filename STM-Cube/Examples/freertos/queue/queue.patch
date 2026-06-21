@@ -1,0 +1,55 @@
+diff --git a/queue/Core/Src/main.c b/queue/Core/Src/main.c
+index 8cfb107..3ab6b02 100644
+--- a/queue/Core/Src/main.c
++++ b/queue/Core/Src/main.c
+@@ -22,7 +22,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "stdio.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -74,7 +74,10 @@ void sendTask_func(void *argument);
+ void receiveTask_func(void *argument);
+ 
+ /* USER CODE BEGIN PFP */
+-
++int __io_putchar(int ch) {
++  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
++  return ch;
++}
+ /* USER CODE END PFP */
+ 
+ /* Private user code ---------------------------------------------------------*/
+@@ -277,10 +280,14 @@ static void MX_GPIO_Init(void)
+ void sendTask_func(void *argument)
+ {
+   /* USER CODE BEGIN 5 */
++  uint8_t counter = 0;
+   /* Infinite loop */
+   for(;;)
+   {
+-    osDelay(1);
++	printf("Put counter value %u\n", (unsigned int)counter);
++	osMessageQueuePut(queueHandle, &counter, 0U, osWaitForever);
++    osDelay(1000);
++    counter++;
+   }
+   /* USER CODE END 5 */
+ }
+@@ -295,10 +302,12 @@ void sendTask_func(void *argument)
+ void receiveTask_func(void *argument)
+ {
+   /* USER CODE BEGIN receiveTask_func */
++  uint8_t counter;
+   /* Infinite loop */
+   for(;;)
+   {
+-    osDelay(1);
++	osMessageQueueGet(queueHandle, &counter, 0U, osWaitForever);
++	printf("Get counter value %u\n", (unsigned int)counter);
+   }
+   /* USER CODE END receiveTask_func */
+ }

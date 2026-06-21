@@ -1,0 +1,52 @@
+diff --git a/timer/Core/Src/main.c b/timer/Core/Src/main.c
+index c1c1d80..7f4122a 100644
+--- a/timer/Core/Src/main.c
++++ b/timer/Core/Src/main.c
+@@ -22,7 +22,7 @@
+ 
+ /* Private includes ----------------------------------------------------------*/
+ /* USER CODE BEGIN Includes */
+-
++#include "stdio.h"
+ /* USER CODE END Includes */
+ 
+ /* Private typedef -----------------------------------------------------------*/
+@@ -67,7 +67,10 @@ void blink_task_func(void *argument);
+ void hello_print_timer_cb(void *argument);
+ 
+ /* USER CODE BEGIN PFP */
+-
++int __io_putchar(int ch) {
++  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
++  return ch;
++}
+ /* USER CODE END PFP */
+ 
+ /* Private user code ---------------------------------------------------------*/
+@@ -126,6 +129,7 @@ int main(void)
+ 
+   /* USER CODE BEGIN RTOS_TIMERS */
+   /* start timers, add new ones, ... */
++  osTimerStart(hello_print_timerHandle, 1000);
+   /* USER CODE END RTOS_TIMERS */
+ 
+   /* USER CODE BEGIN RTOS_QUEUES */
+@@ -281,7 +285,8 @@ void blink_task_func(void *argument)
+   /* Infinite loop */
+   for(;;)
+   {
+-    osDelay(1);
++	HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
++    osDelay(500);
+   }
+   /* USER CODE END 5 */
+ }
+@@ -290,7 +295,7 @@ void blink_task_func(void *argument)
+ void hello_print_timer_cb(void *argument)
+ {
+   /* USER CODE BEGIN hello_print_timer_cb */
+-
++  printf("Hello from timer\n");
+   /* USER CODE END hello_print_timer_cb */
+ }
+ 
