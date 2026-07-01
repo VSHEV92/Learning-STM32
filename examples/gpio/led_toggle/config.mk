@@ -1,0 +1,1 @@
+EXAMPLE_SOURCES += main.c
