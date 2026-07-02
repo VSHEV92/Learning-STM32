@@ -51,7 +51,7 @@ build_project:
 
 
 program_project:
-	STM32_Programmer_CLI -c port=SWD -w $(CUBE_PROJECT_PATH)/$(PROJECT_NAME)/Release/$(PROJECT_NAME).elf 
+	STM32_Programmer_CLI -c port=SWD mode=UR -w $(CUBE_PROJECT_PATH)/$(PROJECT_NAME)/Release/$(PROJECT_NAME).elf 
 	STM32_Programmer_CLI -c port=SWD -rst
 
 

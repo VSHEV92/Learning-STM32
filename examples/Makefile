@@ -2,6 +2,7 @@
 # Target MCU settings
 MCU_FAMILY := f4
 MCU := F411
+MCU_HAL := F411xE
 CORE := m4
 FLOAT_ABI := hard
 FLOAT_ARCH := fpv4-sp-d16
@@ -16,8 +17,8 @@ include $(EXAMPLE_DIR)/config.mk
 
 # Third Party Repos
 CMSIS_REPO := third_party/CMSIS_6
-STM32CUBE_REPO := third_party/STM32Cube$(MCU)
-THIRD_PARTY_REPOS := $(CMSIS_REPO) $(STM32CUBE_REPO)
+STM32HAL_REPO := third_party/stm32$(MCU_FAMILY)xx-hal-driver
+STM32CMSIS_REPO := third_party/cmsis-device-$(MCU_FAMILY)
 
 # Toolchain
 CROSS_COMPILE := arm-none-eabi-
@@ -26,16 +27,23 @@ CROSS_COMPILE := arm-none-eabi-
 SRC_FILES += $(addprefix $(EXAMPLE_DIR)/,$(EXAMPLE_SOURCES))
 SRC_FILES += common/startup_stm32$(MCU_FAMILY).s
 SRC_FILES += common/init_$(MCU_FAMILY).c
+SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal.c
+SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_cortex.c
+SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_rcc.c
+SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_flash.c
+SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_flash_ex.c
+SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_pwr.c
+SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_pwr_ex.c
+SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_gpio.c
 
 #includes
 INC_DIRS += -I$(EXAMPLE_DIR)
 INC_DIRS += -I$(CMSIS_REPO)/CMSIS/Core/Include
-INC_DIRS += -I$(STM32CUBE_REPO)/Inc
+INC_DIRS += -I$(STM32HAL_REPO)/Inc
+INC_DIRS += -I$(STM32CMSIS_REPO)/Include
 
 #defines
-ifeq ($(FLOAT_ABI), hard)
-DEFINES += -D__FPU_PRESENT
-endif
+DEFINES += -DSTM32$(MCU_HAL)
 
 # GCC flags
 CFLAGS += -mthumb
@@ -50,22 +58,21 @@ LDFLAGS += -nostartfiles
 LDFLAGS += -nostdlib
 LDFLAGS += -T common/STM32$(MCU).ld
 
-all: example.elf
+all: flash
 
-
-example.elf: $(THIRD_PARTY_REPOS)
+example.elf: third_party $(SRC_FILES)
 	$(CROSS_COMPILE)gcc $(CFLAGS) $(LDFLAGS) $(DEFINES) $(INC_DIRS) -o example.elf $(SRC_FILES)
 
+flash: example.elf
+	STM32_Programmer_CLI -c port=SWD mode=UR -w example.elf 
+	STM32_Programmer_CLI -c port=SWD -rst
 
 # ---------- Third Party Targets -----------
 third_party:
 	mkdir third_party
-
-$(STM32CUBE_REPO): third_party
-	- cd third_party; git clone https://github.com/STMicroelectronics/stm32$(MCU_FAMILY)xx-hal-driver.git
-
-$(CMSIS_REPO): third_party
-	- cd third_party; git clone https://github.com/ARM-software/CMSIS_6.git
+	cd third_party; git clone https://github.com/ARM-software/CMSIS_6.git
+	cd third_party; git clone https://github.com/STMicroelectronics/stm32$(MCU_FAMILY)xx-hal-driver.git
+	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-$(MCU_FAMILY).git
 
 clean:
 	rm -rf third_party
