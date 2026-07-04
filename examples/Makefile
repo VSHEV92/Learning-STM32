@@ -1,19 +1,11 @@
-
-# Target MCU settings
-MCU_FAMILY := f4
-MCU := F411
-MCU_HAL := F411xE
-CORE := m4
-FLOAT_ABI := hard
-FLOAT_ARCH := fpv4-sp-d16
-
 # Example settings
 ifndef example
 $(error 'example' variable is not set)
 endif
 
 EXAMPLE_DIR := $(abspath $(example))
-include $(EXAMPLE_DIR)/$(MCU_FAMILY)/config.mk
+
+include $(EXAMPLE_DIR)/config.mk
 
 # Third Party Repos
 CMSIS_REPO := third_party/CMSIS_6
@@ -24,14 +16,14 @@ STM32CMSIS_REPO := third_party/cmsis-device-$(MCU_FAMILY)
 CROSS_COMPILE := arm-none-eabi-
 
 # Sources
-SRC_FILES += $(addprefix $(EXAMPLE_DIR)/,$(EXAMPLE_SOURCES))
+SRC_FILES += $(addprefix $(EXAMPLE_DIR)/../,$(EXAMPLE_SOURCES))
 SRC_FILES += common/$(MCU_FAMILY)/startup.s
 SRC_FILES += common/$(MCU_FAMILY)/init.c
 SRC_FILES += $(HAL_SOURCES)
 
 
 #includes
-INC_DIRS += -I$(EXAMPLE_DIR)/$(MCU_FAMILY)
+INC_DIRS += -I$(EXAMPLE_DIR)
 INC_DIRS += -Icommon/$(MCU_FAMILY)
 INC_DIRS += -I$(CMSIS_REPO)/CMSIS/Core/Include
 INC_DIRS += -I$(STM32HAL_REPO)/Inc

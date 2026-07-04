@@ -1,6 +1,6 @@
 #include "led_toggle.h"
 
-#define TOGGLE_DELAY 500
+#define TOGGLE_DELAY 200
 
 void Error_Handler(void);
 void SystemClock_Config(void);

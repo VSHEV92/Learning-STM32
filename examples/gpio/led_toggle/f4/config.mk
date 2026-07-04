@@ -1,4 +1,10 @@
 # Target configurations
+MCU_FAMILY := f4
+MCU := F411
+MCU_HAL := F411xE
+CORE := m4
+FLOAT_ABI := hard
+FLOAT_ARCH := fpv4-sp-d16
 
 # Sources
 EXAMPLE_SOURCES += main.c
