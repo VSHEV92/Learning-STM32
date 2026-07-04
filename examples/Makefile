@@ -13,7 +13,7 @@ $(error 'example' variable is not set)
 endif
 
 EXAMPLE_DIR := $(abspath $(example))
-include $(EXAMPLE_DIR)/config.mk
+include $(EXAMPLE_DIR)/$(MCU_FAMILY)/config.mk
 
 # Third Party Repos
 CMSIS_REPO := third_party/CMSIS_6
@@ -25,19 +25,14 @@ CROSS_COMPILE := arm-none-eabi-
 
 # Sources
 SRC_FILES += $(addprefix $(EXAMPLE_DIR)/,$(EXAMPLE_SOURCES))
-SRC_FILES += common/startup_stm32$(MCU_FAMILY).s
-SRC_FILES += common/init_$(MCU_FAMILY).c
-SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal.c
-SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_cortex.c
-SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_rcc.c
-SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_flash.c
-SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_flash_ex.c
-SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_pwr.c
-SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_pwr_ex.c
-SRC_FILES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_gpio.c
+SRC_FILES += common/$(MCU_FAMILY)/startup.s
+SRC_FILES += common/$(MCU_FAMILY)/init.c
+SRC_FILES += $(HAL_SOURCES)
+
 
 #includes
-INC_DIRS += -I$(EXAMPLE_DIR)
+INC_DIRS += -I$(EXAMPLE_DIR)/$(MCU_FAMILY)
+INC_DIRS += -Icommon/$(MCU_FAMILY)
 INC_DIRS += -I$(CMSIS_REPO)/CMSIS/Core/Include
 INC_DIRS += -I$(STM32HAL_REPO)/Inc
 INC_DIRS += -I$(STM32CMSIS_REPO)/Include
@@ -56,7 +51,7 @@ endif
 
 LDFLAGS += -nostartfiles
 LDFLAGS += -nostdlib
-LDFLAGS += -T common/STM32$(MCU).ld
+LDFLAGS += -T common/$(MCU_FAMILY)/link.ld
 
 all: flash
 
