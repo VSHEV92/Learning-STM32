@@ -18,10 +18,6 @@ void main() {
     }
 }
 
-void SysTick_Handler(void)
-{
-  HAL_IncTick();
-}
 
 void SystemClock_Config(void)
 {

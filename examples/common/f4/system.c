@@ -25,8 +25,22 @@ const uint8_t APBPrescTable[8]  = {0, 0, 0, 0, 1, 2, 3, 4};
 /* 
  * Most earlier system init callback.
  * Called in startup.s right after stack setup.
-*/
+ */
 void SystemInit(void) {
     // FPU settings. Set CP10 and CP11 Full Access
     SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));
 }
+
+/*
+ * Setup timer handler that increment HAL tick counter.
+ * FreeRTOS use Systick for it own perpuse so we use other timer.
+ */
+extern void HAL_IncTick();
+
+#ifdef USE_FREERTOS
+  // TODO:
+#else
+void SysTick_Handler(void) {
+  HAL_IncTick();
+}
+#endif
