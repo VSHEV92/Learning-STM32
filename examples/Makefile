@@ -19,6 +19,7 @@ CROSS_COMPILE := arm-none-eabi-
 SRC_FILES += $(addprefix $(EXAMPLE_DIR)/../,$(EXAMPLE_SOURCES))
 SRC_FILES += common/$(MCU_FAMILY)/startup.s
 SRC_FILES += common/$(MCU_FAMILY)/system.c
+SRC_FILES += common/system.c
 SRC_FILES += $(HAL_SOURCES)
 
 
