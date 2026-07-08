@@ -16,6 +16,9 @@ void USART2_IRQHandler(void) {
     HAL_UART_IRQHandler(&huart2);
 }
 
+void DMA1_Stream6_IRQHandler(void) {
+    HAL_DMA_IRQHandler(&hdma_usart2_tx);
+}
 
 void main() {
 
@@ -90,6 +93,10 @@ void main() {
     HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
 
+    HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
+
+
     // print counter values
     uint8_t cntr = 0;
     char msg[30];
@@ -98,7 +105,7 @@ void main() {
         sprintf(msg, "Counter value: %3d\n", cntr);
         cntr++;
 
-        HAL_UART_Transmit_IT(&huart2, (uint8_t*)msg, strlen(msg));
+        HAL_UART_Transmit_DMA(&huart2, (uint8_t*)msg, strlen(msg));
         HAL_Delay(500);
     }
 }
