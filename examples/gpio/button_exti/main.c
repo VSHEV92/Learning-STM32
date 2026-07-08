@@ -1,4 +1,17 @@
-#include "button_led.h"
+#include "button_exti.h"
+
+// external interrupt ISR
+void EXTI1_IRQHandler(void) {
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+}
+
+// external interrupt Callback
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    if (GPIO_Pin == GPIO_PIN_1) {
+	    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+    }
+}
+
 
 void main() {
 
@@ -26,15 +39,19 @@ void main() {
     // Initialize GPIO Button Pin
     GPIO_InitTypeDef GPIO_InitStruct_Button = {
         .Pin   = GPIO_PIN_1,             // pin number
-        .Mode  = GPIO_MODE_INPUT,        // input mode
+        .Mode  = GPIO_MODE_IT_RISING,    // external interrupt on rising edge mode
         .Pull  = GPIO_NOPULL,            // disable pull up/down registers
     };
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct_Button);
 
-    uint32_t button_value;
-    while (1) {
-	    button_value = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_1);
-	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, button_value);
-    }
+    // Configure interrupts to maximum priority (lowest value)
+    HAL_NVIC_SetPriority(
+        EXTI1_IRQn, // IRQ number
+        0,          // Preempt Priority
+        0           // Sub Priority
+    );
+    HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+
+    while (1) {}
 }
 
