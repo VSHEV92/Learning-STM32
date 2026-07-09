@@ -4,6 +4,7 @@ $(error 'example' variable is not set)
 endif
 
 EXAMPLE_DIR := $(abspath $(example))
+DRIVERS_DIR := common/drivers
 
 include $(EXAMPLE_DIR)/config.mk
 
@@ -21,14 +22,17 @@ SRC_FILES += common/$(MCU_FAMILY)/startup.s
 SRC_FILES += common/$(MCU_FAMILY)/system.c
 SRC_FILES += common/system.c
 SRC_FILES += $(HAL_SOURCES)
+SRC_FILES += $(DRIVER_SOURCES)
 
 
 #includes
 INC_DIRS += -I$(EXAMPLE_DIR)
-INC_DIRS += -Icommon/$(MCU_FAMILY)
 INC_DIRS += -I$(CMSIS_REPO)/CMSIS/Core/Include
 INC_DIRS += -I$(STM32HAL_REPO)/Inc
 INC_DIRS += -I$(STM32CMSIS_REPO)/Include
+
+INC_DIRS += -Icommon/$(MCU_FAMILY)
+INC_DIRS += -Icommon/drivers/74HC595
 
 #defines
 DEFINES += -DSTM32$(MCU_HAL)
