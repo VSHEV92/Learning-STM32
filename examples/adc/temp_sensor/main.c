@@ -62,7 +62,7 @@ void main() {
     hadc1.Init.Resolution            = ADC_RESOLUTION_12B;            // set convertion resolution to 12 bit
     hadc1.Init.ScanConvMode          = DISABLE;                       // don't use scan mode (only one channel converted)
     hadc1.Init.ContinuousConvMode    = DISABLE;                       // don't use continuous mode (one shot)
-    hadc1.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE; // don't use external trgger for convertion
+    hadc1.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE; // don't use external trigger for convertion
     hadc1.Init.ExternalTrigConv      = ADC_SOFTWARE_START;            // run convertion by sofwtare call
     hadc1.Init.DataAlign             = ADC_DATAALIGN_RIGHT;           // right align of 12 bit data in register
     hadc1.Init.NbrOfConversion       = 1;                             // one convertion in convertion sequence
