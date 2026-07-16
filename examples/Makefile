@@ -33,6 +33,7 @@ INC_DIRS += -I$(STM32CMSIS_REPO)/Include
 
 INC_DIRS += -Icommon/$(MCU_FAMILY)
 INC_DIRS += -Icommon/drivers/74HC595
+INC_DIRS += -Icommon/drivers/MAX7219
 
 #defines
 DEFINES += -DSTM32$(MCU_HAL)
