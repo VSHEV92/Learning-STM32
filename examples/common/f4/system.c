@@ -37,10 +37,8 @@ void SystemInit(void) {
  */
 extern void HAL_IncTick();
 
-#ifdef USE_FREERTOS
-  // TODO:
-#else
+#ifndef USE_FREERTOS
 void SysTick_Handler(void) {
-  HAL_IncTick();
+    HAL_IncTick();
 }
 #endif
