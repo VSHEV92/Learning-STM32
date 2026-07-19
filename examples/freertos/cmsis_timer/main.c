@@ -1,32 +1,25 @@
-#include "cmsis_queue.h"
+#include "cmsis_timer.h"
 
 // UART Handler
 UART_HandleTypeDef huart2;
 
 
-// TX Thread
-osThreadId_t sendTaskHandle;
-const osThreadAttr_t sendTask_attributes = {
-    .name = "sendTask",
+// Blink Thread
+osThreadId_t blink_taskHandle;
+const osThreadAttr_t blink_task_attributes = {
+    .name = "blink_task",
     .stack_size = 1024 * 4,
     .priority = (osPriority_t) osPriorityNormal,
 };
-void sendTask_func(void *argument);
+void blink_task_func(void *argument);
 
-// RX Thread
-osThreadId_t receiveTaskHandle;
-const osThreadAttr_t receiveTask_attributes = {
-    .name = "receiveTask",
-    .stack_size = 1024 * 4,
-    .priority = (osPriority_t) osPriorityAboveNormal,
-};
-void receiveTask_func(void *argument);
 
-// Queue
-osMessageQueueId_t queueHandle;
-const osMessageQueueAttr_t queue_attributes = {
-    .name = "queue"
+// Timer 
+osTimerId_t hello_print_timerHandle;
+const osTimerAttr_t hello_print_timer_attributes = {
+    .name = "hello_print_timer"
 };
+void hello_print_timer_cb(void *argument);
 
 
 // Set UART 2 interface as input/output stream
@@ -58,14 +51,22 @@ void main() {
 
 
     // Setup GPIO pins
-    GPIO_InitTypeDef GPIO_Init = {
+    GPIO_InitTypeDef GPIO_Init_UART = {
         .Pin       = GPIO_PIN_2|GPIO_PIN_3,      // choose GPIO pins
         .Mode      = GPIO_MODE_AF_PP,            // set pins mode to alternative function
         .Pull      = GPIO_NOPULL,                // disable pull up/down registers
         .Speed     = GPIO_SPEED_FREQ_VERY_HIGH,  // set slew rate 
         .Alternate = GPIO_AF7_USART2,            // choose UART2 as alternative function
     };
-    HAL_GPIO_Init(GPIOA, &GPIO_Init);
+    HAL_GPIO_Init(GPIOA, &GPIO_Init_UART);
+
+    GPIO_InitTypeDef GPIO_Init_LED = {
+        .Pin   = GPIO_PIN_5,             // pin number
+        .Mode  = GPIO_MODE_OUTPUT_PP,    // output push-pull mode
+        .Pull  = GPIO_NOPULL,            // disable pull up/down registers
+        .Speed = GPIO_SPEED_FREQ_LOW,    // set slew rate to low
+    };
+    HAL_GPIO_Init(GPIOA, &GPIO_Init_LED);
 
 
     // Initalize UART
@@ -90,14 +91,12 @@ void main() {
 
     osKernelInitialize();
 
-    // Create Queue
-    queueHandle = osMessageQueueNew (16, sizeof(uint8_t), &queue_attributes);
-
-    // Create TX thread
-    sendTaskHandle = osThreadNew(sendTask_func, NULL, &sendTask_attributes);
-
-    // Create RX thread
-    receiveTaskHandle = osThreadNew(receiveTask_func, NULL, &receiveTask_attributes);
+    // Create and Start Timer
+    hello_print_timerHandle = osTimerNew(hello_print_timer_cb, osTimerPeriodic, NULL, &hello_print_timer_attributes);
+    osTimerStart(hello_print_timerHandle, 1000);
+  
+    // Create Blink Thread
+    blink_taskHandle = osThreadNew(blink_task_func, NULL, &blink_task_attributes);
 
     osKernelStart();
 
@@ -106,26 +105,15 @@ void main() {
 }
 
 
-// TX Thread Function
-void sendTask_func(void *argument) {
-
-    uint8_t counter = 0;
+// Blink Thread Function
+void blink_task_func(void *argument) {
     for(;;) {
-	    printf("Put counter value %u\n", (unsigned int)counter);
-	    osMessageQueuePut(queueHandle, &counter, 0U, osWaitForever);
-        osDelay(1000);
-        counter++;
-    }
-
-}
-
-
-// RX Thread Function
-void receiveTask_func(void *argument) {
-    uint8_t counter;
-    for(;;) {
-	    osMessageQueueGet(queueHandle, &counter, 0U, osWaitForever);
-	    printf("Get counter value %u\n", (unsigned int)counter);
+	    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+        osDelay(500);
     }
 }
 
+// Timer Callback
+void hello_print_timer_cb(void *argument) {
+    printf("Hello from timer\n");
+}
