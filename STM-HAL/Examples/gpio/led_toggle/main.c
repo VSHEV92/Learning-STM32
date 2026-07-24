@@ -1,6 +1,6 @@
 #include "led_toggle.h"
 
-#define TOGGLE_DELAY 500
+#define TOGGLE_DELAY 100
 
 void main() {
 
@@ -13,21 +13,22 @@ void main() {
      */
     HAL_Init();
 
-    // Enable GPIO Port A clock
+    // Enable GPIO clocks
     __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
 
     // Initialize GPIO pin
     GPIO_InitTypeDef GPIO_InitStruct = {
-        .Pin   = GPIO_PIN_5,             // pin number
+        .Pin   = LED_PIN,                // pin number
         .Mode  = GPIO_MODE_OUTPUT_PP,    // output push-pull mode
         .Pull  = GPIO_NOPULL,            // disable pull up/down registers
         .Speed = GPIO_SPEED_FREQ_LOW,    // set slew rate to low
     };
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(LED_PORT, &GPIO_InitStruct);
     
 
     while (1) {
-	    HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+	    HAL_GPIO_TogglePin(LED_PORT, LED_PIN);
 	    HAL_Delay(TOGGLE_DELAY);
     }
 }
