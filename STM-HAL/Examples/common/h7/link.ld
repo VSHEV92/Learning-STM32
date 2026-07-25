@@ -35,7 +35,7 @@ SECTIONS
     *(.data)
     *(.data*)
     _edata = .;
-  } >RAM AT> FLASH
+  } >RAM_D1 AT> FLASH
 
   .bss :
   {
@@ -44,7 +44,7 @@ SECTIONS
     *(.bss*)
     _ebss = .;
     _end = .;
-  } >RAM
+  } >RAM_D1
 
   _sidata = LOADADDR(.data);
   _estack = ORIGIN(RAM_D1) + LENGTH(RAM_D1);

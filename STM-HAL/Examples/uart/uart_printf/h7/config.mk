@@ -1,20 +1,24 @@
 # Target configurations
-MCU_FAMILY := f4
-MCU := F411
-MCU_HAL := F411xE
-CORE := m4
+MCU_FAMILY := h7
+MCU := H755
+MCU_HAL := H755xx
+CORE := m7
 FLOAT_ABI := hard
 FLOAT_ARCH := fpv4-sp-d16
 
 # Sources
 EXAMPLE_SOURCES += main.c
-EXAMPLE_SOURCES += f4/perif_init.c
+EXAMPLE_SOURCES += h7/perif_init.c
 
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal.c
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_cortex.c
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_rcc.c
+HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_rcc_ex.c
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_flash.c
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_flash_ex.c
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_gpio.c
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_dma.c
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_uart.c
+HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_uart_ex.c
+
+DEFINES += -DCORE_CM7
