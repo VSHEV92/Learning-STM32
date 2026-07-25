@@ -8,6 +8,7 @@ FLOAT_ARCH := fpv4-sp-d16
 
 # Sources
 EXAMPLE_SOURCES += main.c
+EXAMPLE_SOURCES += h7/perif_init.c
 
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal.c
 HAL_SOURCES += $(STM32HAL_REPO)/Src/stm32$(MCU_FAMILY)xx_hal_cortex.c

@@ -78,12 +78,17 @@ flash: example.elf
 third_party:
 	mkdir third_party
 	cd third_party; git clone https://github.com/ARM-software/CMSIS_6.git
-	cd third_party; git clone https://github.com/STMicroelectronics/stm32$(MCU_FAMILY)xx-hal-driver.git
-	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-$(MCU_FAMILY).git
+
+	cd third_party; git clone https://github.com/STMicroelectronics/stm32f4xx-hal-driver.git
+	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-f4.git
+
+	cd third_party; git clone https://github.com/STMicroelectronics/stm32h7xx-hal-driver.git
+	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-h7.git
+	
 	cd third_party; git clone https://github.com/STMicroelectronics/stm32-mw-freertos.git
 
 clean:
 	rm -rf third_party
 	rm -rf example.elf
 
-.PHONY: clean
+.PHONY: clean all flash example.elf
