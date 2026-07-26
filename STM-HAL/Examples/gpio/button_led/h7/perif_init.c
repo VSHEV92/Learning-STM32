@@ -1,9 +1,10 @@
-#include "button_exti.h"
+
+#include "button_led.h"
 
 void Peripheral_Init() {
-    
     // Enable GPIO Clocks
     __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
 
     // Initialize GPIO Led Pin
     GPIO_InitTypeDef GPIO_InitStruct_Led = {
@@ -16,18 +17,9 @@ void Peripheral_Init() {
     
     // Initialize GPIO Button Pin
     GPIO_InitTypeDef GPIO_InitStruct_Button = {
-        .Pin   = GPIO_PIN_1,             // pin number
-        .Mode  = GPIO_MODE_IT_RISING,    // external interrupt on rising edge mode
+        .Pin   = GPIO_PIN_0,             // pin number
+        .Mode  = GPIO_MODE_INPUT,        // input mode
         .Pull  = GPIO_NOPULL,            // disable pull up/down registers
     };
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct_Button);
-
-    // Configure interrupts to maximum priority (lowest value)
-    HAL_NVIC_SetPriority(
-        EXTI1_IRQn, // IRQ number
-        0,          // Preempt Priority
-        0           // Sub Priority
-    );
-    HAL_NVIC_EnableIRQ(EXTI1_IRQn);
-
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct_Button);
 }

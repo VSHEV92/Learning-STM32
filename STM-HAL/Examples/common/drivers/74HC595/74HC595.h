@@ -5,6 +5,10 @@
     #include "stm32f4xx_hal_gpio.h"
 #endif
 
+#ifdef STM32H755xx
+    #include "stm32h7xx_hal_gpio.h"
+#endif
+
 #define Number_of_Registers 2
 
 typedef enum
