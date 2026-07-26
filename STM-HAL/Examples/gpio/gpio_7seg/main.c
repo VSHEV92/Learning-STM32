@@ -12,24 +12,12 @@ void main() {
      */
     HAL_Init();
 
-    // Enable GPIO clocks
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
 
-    // Initialize GPIO pins
-    GPIO_InitTypeDef GPIO_InitStruct;
-    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull  = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    /*
+     *  Initialize example peripheral
+     */
+    Peripheral_Init();
 
-    GPIO_InitStruct.Pin = SERIAL_CLK_Pin;
-    HAL_GPIO_Init(SERIAL_CLK_GPIO_Port, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = SERIAL_DATA_Pin;
-    HAL_GPIO_Init(SERIAL_DATA_GPIO_Port, &GPIO_InitStruct);
-    
-    GPIO_InitStruct.Pin = LATCH_CLK_Pin;
-    HAL_GPIO_Init(LATCH_CLK_GPIO_Port, &GPIO_InitStruct);
 
     // Data fot 7-segments led (BEAF)
     unsigned char data_7seg[4][2] = {

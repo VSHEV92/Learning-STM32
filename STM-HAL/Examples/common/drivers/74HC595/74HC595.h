@@ -1,7 +1,9 @@
 #ifndef __74HC595_h__
 #define __74HC595_h__
 
-#include "stm32f4xx_hal_gpio.h"
+#ifdef STM32F411xE
+    #include "stm32f4xx_hal_gpio.h"
+#endif
 
 #define Number_of_Registers 2
 
