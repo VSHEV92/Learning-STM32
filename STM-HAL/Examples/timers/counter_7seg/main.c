@@ -1,7 +1,5 @@
 #include "counter_7seg.h"
 
-TIM_HandleTypeDef htim2;
-TIM_HandleTypeDef htim3;
 
 // Data for ISR porcessing
 uint32_t segment = 0;
@@ -29,7 +27,7 @@ unsigned char digit_to_7seg(char digit) {
 // Setup timer ISR
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     // Update counter value 
-    if (htim == &htim2) {
+    if (htim == &DISPLAY_UPDATE_TIMER) {
 	    shiftRegisters[0] = (1 << segment);
 	    shiftRegisters[1] = data_7seg[segment];
 	
@@ -39,7 +37,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     }
 
     // Increment Counter Value
-    if (htim == &htim3) {
+    if (htim == &COUNTER_INCREMENT_TIMER) {
 	    counter = (counter + 1) % 10000;
 
         char counter_string[5];
@@ -49,14 +47,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     	    data_7seg[i] = digit_to_7seg(counter_string[i]);
         }
     }
-}
-
-void TIM2_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&htim2);
-}
-
-void TIM3_IRQHandler(void) {
-    HAL_TIM_IRQHandler(&htim3);
 }
 
 void main() {
@@ -70,56 +60,16 @@ void main() {
      */
     HAL_Init();
 
-    // Enable Clocks
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
 
-    __HAL_RCC_TIM2_CLK_ENABLE();
-    __HAL_RCC_TIM3_CLK_ENABLE();
+    /*
+     *  Initialize example peripheral
+     */
+    Peripheral_Init();
 
-    // Initialize GPIO pin
-    GPIO_InitTypeDef GPIO_InitStruct;
-    GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull  = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-
-    GPIO_InitStruct.Pin = SERIAL_CLK_Pin;
-    HAL_GPIO_Init(SERIAL_CLK_GPIO_Port, &GPIO_InitStruct);
-
-    GPIO_InitStruct.Pin = SERIAL_DATA_Pin;
-    HAL_GPIO_Init(SERIAL_DATA_GPIO_Port, &GPIO_InitStruct);
-    
-    GPIO_InitStruct.Pin = LATCH_CLK_Pin;
-    HAL_GPIO_Init(LATCH_CLK_GPIO_Port, &GPIO_InitStruct);
-    
-    
-    // Initialize Timer
-    htim2.Instance = TIM2;
-    htim2.Init.Prescaler = 1600 - 1;
-    htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim2.Init.Period = 10;
-    htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-    HAL_TIM_Base_Init(&htim2);
-
-    htim3.Instance = TIM3;
-    htim3.Init.Prescaler = 16000 - 1;
-    htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-    htim3.Init.Period = 333;
-    htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-    htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-    HAL_TIM_Base_Init(&htim3);
-
-    // Setup timers interrupts
-    HAL_NVIC_SetPriority( TIM2_IRQn, 0, 0 );
-    HAL_NVIC_EnableIRQ(TIM2_IRQn );
-
-    HAL_NVIC_SetPriority( TIM3_IRQn, 0, 0 );
-    HAL_NVIC_EnableIRQ(TIM3_IRQn );
 
     // Start timers in interrupt mode 
-    HAL_TIM_Base_Start_IT(&htim2);
-    HAL_TIM_Base_Start_IT(&htim3);
+    HAL_TIM_Base_Start_IT(&DISPLAY_UPDATE_TIMER);
+    HAL_TIM_Base_Start_IT(&COUNTER_INCREMENT_TIMER);
 
     while (1) {}
 }
