@@ -1,4 +1,4 @@
-#include "stm32f4xx_hal.h"
+#include "stm32h7xx_hal.h"
 #include "stdio.h"
 #include "74HC595.h"
 
@@ -12,4 +12,4 @@ extern TIM_HandleTypeDef htim3;
 #define DISPLAY_UPDATE_TIMER htim2
 #define ADC_VALUE_UPDATE_TIMER htim3
 
-#define MAX_ADC_VALUE 4095
+#define MAX_ADC_VALUE 65535

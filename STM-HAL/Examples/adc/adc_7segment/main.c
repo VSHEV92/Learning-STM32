@@ -42,7 +42,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
         char data_7seg_string[5];
 
-        snprintf(data_7seg_string, sizeof(data_7seg_string), "%04u", (unsigned int)adc_value);
+        snprintf(data_7seg_string, sizeof(data_7seg_string), "%04u", (unsigned int) ( (adc_value * 1000) / MAX_ADC_VALUE) );
 
         for (int i = 0; i < 4; i++) {
     	    data_7seg[i] = digit_to_7seg(data_7seg_string[i]);
