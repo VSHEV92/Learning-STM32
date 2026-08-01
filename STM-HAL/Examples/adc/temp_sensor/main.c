@@ -1,11 +1,6 @@
 #include "temp_sensor.h"
 
 
-// Temperature Convertion Constants
-const float VOLTAGE_AT_25C = 0.76;
-const float ADC_AVG_SLOPE = 0.0025;
-const float BOARD_REF_VLOTAGE = 3.3;
-
 // Set UART 2 interface as input/output stream
 int __io_putchar(int ch) {
   HAL_UART_Transmit(&STDIO_UART, (uint8_t *)&ch, 1, HAL_MAX_DELAY); 
@@ -36,9 +31,9 @@ void main() {
     
     	uint16_t adc_data = HAL_ADC_GetValue(&EXAMPLE_ADC);
     
-    	float adc_voltage = ((float)adc_data * BOARD_REF_VLOTAGE) / 4095.0;
+    	float adc_voltage = ((float)adc_data * BOARD_REF_VLOTAGE) / MAX_ADC_VALUE;
     
-    	float temperature = ((adc_voltage - VOLTAGE_AT_25C) / ADC_AVG_SLOPE) + 25.0;
+    	float temperature = ((adc_voltage - VOLTAGE_AT_REF_TEMP) / ADC_AVG_SLOPE) + REF_TEMP;
 
         int integer = temperature;
         int fraction = (temperature - integer) * 100;

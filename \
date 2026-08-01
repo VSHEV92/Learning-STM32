@@ -1,0 +1,123 @@
+#include "temp_sensor.h"
+
+// UART3 Handler
+UART_HandleTypeDef huart3;
+ADC_HandleTypeDef hadc3;
+
+void Peripheral_Init() {
+    
+    // Enable GPIO Port D and UART 3 clocks
+    __HAL_RCC_GPIOD_CLK_ENABLE();
+    __HAL_RCC_USART3_CLK_ENABLE();
+    __HAL_RCC_ADC3_CLK_ENABLE();
+
+
+    // Setup GPIO pins
+    GPIO_InitTypeDef GPIO_Init = {
+        .Pin       = GPIO_PIN_8|GPIO_PIN_9,      // choose GPIO pins
+        .Mode      = GPIO_MODE_AF_PP,            // set pins mode to alternative function
+        .Pull      = GPIO_NOPULL,                // disable pull up/down registers
+        .Speed     = GPIO_SPEED_FREQ_VERY_HIGH,  // set slew rate 
+        .Alternate = GPIO_AF7_USART3,            // choose UART2 as alternative function
+    };
+    HAL_GPIO_Init(GPIOD, &GPIO_Init);
+
+
+    // Initalize UART
+    huart3.Instance          = USART3;                 // uart interface instance
+    huart3.Init.BaudRate     = 9600;                   // buad rate
+    huart3.Init.WordLength   = UART_WORDLENGTH_8B;     // bits per symbol
+    huart3.Init.StopBits     = UART_STOPBITS_1;        // 1 stop bit
+    huart3.Init.Parity       = UART_PARITY_NONE;       // don't use parity bit
+    huart3.Init.Mode         = UART_MODE_TX;           // enable uart tx 
+    huart3.Init.HwFlowCtl    = UART_HWCONTROL_NONE;    // don't use hardware flow control
+    huart3.Init.OverSampling = UART_OVERSAMPLING_16;   // set oversampling to 16 bits  
+    HAL_UART_Init(&huart3);
+
+    // Initialize ADC
+ //   hadc3.Instance                   = ADC3;                          // ADC instance
+ //   hadc3.Init.Resolution = ADC_RESOLUTION_16B;
+ //   hadc3.Init.ScanConvMode = ADC_SCAN_DISABLE;
+ //   hadc3.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+ //   hadc3.Init.LowPowerAutoWait = DISABLE;
+ //   hadc3.Init.ContinuousConvMode = DISABLE;
+ //   hadc3.Init.NbrOfConversion = 1;
+ //   hadc3.Init.DiscontinuousConvMode = DISABLE;
+ //   hadc3.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+ //   hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+ //   hadc3.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DR;
+ //   hadc3.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+ //   hadc3.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
+ //   hadc3.Init.OversamplingMode = DISABLE;
+ //   hadc3.Init.Oversampling.Ratio = 1;
+
+
+
+  //  hadc3.Instance                   = ADC3;                          // ADC instance
+  //  hadc3.Init.ClockPrescaler        = ADC_CLOCK_SYNC_PCLK_DIV2;      // Set ADC Clock as one half of PCLK clock
+  //  hadc3.Init.Resolution            = ADC_RESOLUTION_12B;            // set convertion resolution to 12 bit
+  //  hadc3.Init.ScanConvMode          = DISABLE;                       // don't use scan mode (only one channel converted)
+  //  hadc3.Init.ContinuousConvMode    = DISABLE;                       // don't use continuous mode (one shot)
+  //  hadc3.Init.ExternalTrigConvEdge  = ADC_EXTERNALTRIGCONVEDGE_NONE; // don't use external trigger for convertion
+  //  hadc3.Init.ExternalTrigConv      = ADC_SOFTWARE_START;            // run convertion by sofwtare call
+  //  hadc3.Init.DataAlign             = ADC_DATAALIGN_RIGHT;           // right align of 12 bit data in register
+  //  hadc3.Init.NbrOfConversion       = 1;                             // one convertion in convertion sequence
+  //  hadc3.Init.DMAContinuousRequests = DISABLE;                       // disable DMA ode
+  //  hadc3.Init.EOCSelection          = ADC_EOC_SINGLE_CONV;           // interrut on end of convertion
+//    HAL_ADC_Init(&hadc3);
+
+//    // Configure ADC Channel
+//    ADC_ChannelConfTypeDef Channel_Config = {
+//      //  .Channel      = ADC_CHANNEL_TEMPSENSOR, // use temperature sensor channel
+//      //  .Rank         = 1,                      // set sequence number for channel
+//      //  .SamplingTime = ADC_SAMPLETIME_3CYCLES, // set 3 ACLK cycle for sampling
+//      .Channel = ADC_CHANNEL_TEMPSENSOR,
+//  .Rank = ADC_REGULAR_RANK_1,
+//  .SamplingTime = ADC_SAMPLETIME_1CYCLE_5,
+//  .SingleDiff = ADC_SINGLE_ENDED,
+//  .OffsetNumber = ADC_OFFSET_NONE,
+//  .Offset = 0,
+//  .OffsetSignedSaturation = DISABLE,
+//
+//    };
+//    HAL_ADC_ConfigChannel(&hadc3, &Channel_Config);
+//
+//
+    ADC_ChannelConfTypeDef sConfig = {0};
+
+  /** Common config 
+  */
+  hadc3.Instance = ADC3;
+  hadc3.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV4;           // Asynchronous clock prescaler
+  hadc3.Init.Resolution = ADC_RESOLUTION_16B;                 // Max 16-bit resolution for H7
+  hadc3.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc3.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc3.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc3.Init.LowPowerAutoWait = DISABLE;
+  hadc3.Init.ContinuousConvMode = DISABLE;                    // Polling single conversion mode
+  hadc3.Init.NbrOfConversion = 1;
+  hadc3.Init.DiscontinuousConvMode = DISABLE;
+  hadc3.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc3.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc3.Init.ConversionDataManagement = ADC_CONVERSIONDATA_DR;
+  hadc3.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc3.Init.LeftBitShift = ADC_LEFTBITSHIFT_NONE;
+  hadc3.Init.OversamplingMode = DISABLE;
+  
+  if (HAL_ADC_Init(&hadc3) != HAL_OK)
+  {
+  }
+
+  /** Configure Regular Channel 
+  */
+  sConfig.Channel = ADC_CHANNEL_TEMPSENSOR;                   // Internal Route to Temperature Sensor
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC3_SAMPLETIME_810CYCLES_5;         // Long sampling time required by datasheet
+  sConfig.SingleDiff = ADC_SINGLE_ENDED;
+  sConfig.OffsetNumber = ADC_OFFSET_NONE;
+  sConfig.Offset = 0;
+  
+  if (HAL_ADC_ConfigChannel(&hadc3, &sConfig) != HAL_OK)
+  {
+  }
+}
