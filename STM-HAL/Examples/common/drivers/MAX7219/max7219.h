@@ -2,9 +2,19 @@
 #define MAX7219_H_
 
 #include "stdbool.h"
-#include "stm32f4xx_hal_dma.h"
-#include "stm32f4xx_hal_spi.h"
-#include "stm32f4xx_hal_gpio.h"
+
+#ifdef STM32F411xE
+    #include "stm32f4xx_hal_dma.h"
+    #include "stm32f4xx_hal_spi.h"
+    #include "stm32f4xx_hal_gpio.h"
+#endif
+
+#ifdef STM32H755xx
+    #include "stm32h7xx_hal_dma.h"
+    #include "stm32h7xx_hal_spi.h"
+    #include "stm32h7xx_hal_gpio.h"
+#endif
+
 
 #define NUMBER_OF_DIGITS      8
 #define SPI_PORT              hspi1

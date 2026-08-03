@@ -4,6 +4,7 @@ void max7219_Init() {
     max7219_TurnOff();
     max7219_SendData(REG_SCAN_LIMIT, NUMBER_OF_DIGITS - 1);
     max7219_SendData(REG_DECODE_MODE, 0x00); // decode off
+    max7219_SendData(REG_DISPLAY_TEST, 0x00); // test mode off
     max7219_Clean();
 }
 
