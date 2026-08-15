@@ -79,6 +79,9 @@ third_party:
 	mkdir third_party
 	cd third_party; git clone https://github.com/ARM-software/CMSIS_6.git
 
+	cd third_party; git clone https://github.com/STMicroelectronics/stm32f0xx-hal-driver.git
+	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-f0.git
+
 	cd third_party; git clone https://github.com/STMicroelectronics/stm32f4xx-hal-driver.git
 	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-f4.git
 
