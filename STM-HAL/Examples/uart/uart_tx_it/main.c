@@ -25,6 +25,8 @@ void main() {
 
     // print counter values
     uint8_t cntr = 0;
+
+#ifndef STM32F042x6
     char msg[30];
     
     while (1) {
@@ -34,5 +36,34 @@ void main() {
         HAL_UART_Transmit_IT(&STDIO_UART, (uint8_t*)msg, strlen(msg));
         HAL_Delay(300);
     }
+#else
+    char msg[] = "Counter value: ";
+    
+    uint8_t digit;
+    uint8_t eol = '\n';
+
+    while (1) {
+        cntr++;
+
+        HAL_UART_Transmit(&STDIO_UART, (uint8_t*)msg, sizeof(msg)-1, HAL_MAX_DELAY);
+        
+        // Digits convertion
+        
+        digit = cntr / 100 + '0'; 
+        HAL_UART_Transmit(&STDIO_UART, &digit, 1, HAL_MAX_DELAY);
+
+        digit = cntr % 100; 
+        digit = digit / 10 + '0'; 
+        HAL_UART_Transmit(&STDIO_UART, &digit, 1, HAL_MAX_DELAY);
+
+        digit = cntr % 10 + '0'; 
+        HAL_UART_Transmit(&STDIO_UART, &digit, 1, HAL_MAX_DELAY);
+
+        HAL_UART_Transmit_IT(&STDIO_UART, &eol, 1);
+        
+        HAL_Delay(300);
+    }
+
+#endif
 }
 
