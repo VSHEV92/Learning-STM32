@@ -8,7 +8,8 @@ int __io_putchar(int ch) {
 
 // RTC ISR Handler
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
-    printf("Alarm callback is triggered\n");
+    uint8_t msg[] = "Alarm callback is triggered\n";
+    HAL_UART_Transmit(&STDIO_UART, msg, sizeof(msg) - 1, HAL_MAX_DELAY); 
 }
 
 
@@ -38,8 +39,30 @@ void main() {
         // print Time every 3 seconds
 	    HAL_RTC_GetTime(&EXAMPLE_RTC, &rtc_time, RTC_FORMAT_BIN);
 	    HAL_RTC_GetDate(&EXAMPLE_RTC, &trc_date, RTC_FORMAT_BIN);
+
+    #ifndef STM32F042x6
 	    printf("Time is %02u:%02u:%02u\n", (unsigned int)rtc_time.Hours, (unsigned int)rtc_time.Minutes, (unsigned int)rtc_time.Seconds);
-	    HAL_Delay(3000);
+    #else
+
+        char msg[] = "Time is ";
+
+        uint8_t colon = ':';
+        uint8_t eol = '\n';
+
+        HAL_UART_Transmit(&huart2, (uint8_t*)msg, sizeof(msg)-1, HAL_MAX_DELAY);
+
+        print_int(rtc_time.Hours, 2);
+        HAL_UART_Transmit(&huart2, &colon, 1, HAL_MAX_DELAY);
+
+        print_int(rtc_time.Minutes, 2);
+        HAL_UART_Transmit(&huart2, &colon, 1, HAL_MAX_DELAY);
+
+        print_int(rtc_time.Seconds, 2);
+
+        HAL_UART_Transmit(&huart2, &eol, 1, HAL_MAX_DELAY);
+
+    #endif
+        HAL_Delay(3000);
     }
 }
 
