@@ -4,6 +4,10 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart3;
 
 
+void print_value(uint32_t captured_value) {
+    printf("Captured value is %ld\n", captured_value);
+}
+
 void TIM3_IRQHandler(void) {
     HAL_TIM_IRQHandler(&htim3);
 }

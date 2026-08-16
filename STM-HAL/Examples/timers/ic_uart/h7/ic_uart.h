@@ -2,6 +2,7 @@
 #include "stdio.h"
 
 void Peripheral_Init();
+void print_value(uint32_t captured_value);
 
 extern TIM_HandleTypeDef htim3;
 extern UART_HandleTypeDef huart3;

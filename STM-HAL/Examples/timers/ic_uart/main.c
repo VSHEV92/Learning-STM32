@@ -11,7 +11,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
     // Get input capture value
     uint32_t captured_value = HAL_TIM_ReadCapturedValue(htim, EXEMPLE_TIMER_IC_CHANNEL);
     // Send this value to UART
-    printf("Captured value is %ld\n", captured_value);
+    print_value(captured_value);
 }
 
 void main() {
