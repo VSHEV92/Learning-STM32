@@ -43,7 +43,20 @@ void main() {
     Peripheral_Init();
 
     while (1) {
+
+    #ifdef STM32F042x6
+        uint8_t eol = '\n';
+        char msg_wr[] = "Write to EEPROM: ";
+        char msg_rd[] = "Read from EEPROM: ";
+    #endif
+
+    #ifndef STM32F042x6
 	    printf("Write to EEPROM: %s\n", tx_buffer);
+    #else
+        HAL_UART_Transmit(&huart2, (uint8_t*)msg_wr, sizeof(msg_wr)-1, HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart2, tx_buffer, strlen(tx_buffer), HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart2, &eol, 1, HAL_MAX_DELAY);
+    #endif
 
 	    while( HAL_I2C_IsDeviceReady(&EXAMPLE_I2C, EEPROM_ADDR, 1, HAL_MAX_DELAY) != HAL_OK ) {}
 
@@ -59,7 +72,14 @@ void main() {
 	    while(!rx_completed){}
 	    rx_completed = 0;
 
+
+    #ifndef STM32F042x6
 	    printf("Read from EEPROM: %s\n", rx_buffer);
+    #else
+        HAL_UART_Transmit(&huart2, (uint8_t*)msg_rd, sizeof(msg_rd)-1, HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart2, rx_buffer, strlen(tx_buffer), HAL_MAX_DELAY);
+        HAL_UART_Transmit(&huart2, &eol, 1, HAL_MAX_DELAY);
+    #endif
 
 	    HAL_Delay(500);
   }

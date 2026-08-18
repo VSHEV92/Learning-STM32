@@ -38,7 +38,17 @@ void main() {
         // read counter value
 	    HAL_I2C_IsDeviceReady(&EXAMPLE_I2C, EEPROM_ADDR, 1, HAL_MAX_DELAY);
 	    HAL_I2C_Master_Receive(&EXAMPLE_I2C, EEPROM_ADDR, &counter, 1, HAL_MAX_DELAY);
-        printf("Counter value from EEPROM: %d\n", (int)counter);
+
+    #ifndef STM32F042x6
+	    printf("Counter value from EEPROM: %d\n", (int)counter);
+    #else
+        char msg[] = "Counter value from EEPROM: ";
+        uint8_t eol = '\n';
+
+        HAL_UART_Transmit(&huart2, (uint8_t*)msg, sizeof(msg)-1, HAL_MAX_DELAY);
+        print_int(counter, 3);
+        HAL_UART_Transmit(&huart2, &eol, 1, HAL_MAX_DELAY);
+    #endif
 
         // incremetn counter and write it back
         tx_data[1] = ++counter;
