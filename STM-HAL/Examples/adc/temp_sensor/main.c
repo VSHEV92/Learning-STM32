@@ -37,7 +37,25 @@ void main() {
 
         int integer = temperature;
         int fraction = (temperature - integer) * 100;
+
+    #ifndef STM32F042x6
         printf("Temperature: %d.%02d C\n", integer, fraction);
+    #else
+
+        char msg[] = "Temperature:  ";
+
+        uint8_t dot = '.';
+        uint8_t eol = '\n';
+
+        HAL_UART_Transmit(&huart2, (uint8_t*)msg, sizeof(msg)-1, HAL_MAX_DELAY);
+
+        print_int(integer, 2);
+        HAL_UART_Transmit(&huart2, &dot, 1, HAL_MAX_DELAY);
+        print_int(fraction, 2);
+
+        HAL_UART_Transmit(&huart2, &eol, 1, HAL_MAX_DELAY);
+
+    #endif
     
     	HAL_ADC_Stop(&EXAMPLE_ADC);
     	HAL_Delay(500);
