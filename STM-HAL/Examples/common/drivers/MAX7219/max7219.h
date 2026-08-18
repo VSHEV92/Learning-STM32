@@ -3,6 +3,12 @@
 
 #include "stdbool.h"
 
+#ifdef STM32F042x6
+    #include "stm32f0xx_hal_dma.h"
+    #include "stm32f0xx_hal_spi.h"
+    #include "stm32f0xx_hal_gpio.h"
+#endif
+
 #ifdef STM32F411xE
     #include "stm32f4xx_hal_dma.h"
     #include "stm32f4xx_hal_spi.h"
