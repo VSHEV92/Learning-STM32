@@ -82,6 +82,9 @@ third_party:
 	cd third_party; git clone https://github.com/STMicroelectronics/stm32f0xx-hal-driver.git
 	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-f0.git
 
+	cd third_party; git clone https://github.com/STMicroelectronics/stm32f3xx-hal-driver.git
+	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-f3.git
+
 	cd third_party; git clone https://github.com/STMicroelectronics/stm32f4xx-hal-driver.git
 	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-f4.git
 
