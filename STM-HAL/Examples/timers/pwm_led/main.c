@@ -24,7 +24,7 @@ void main() {
     // Update PWM compare value
     uint32_t pulse_width = 0;
     while (1) {
-	    __HAL_TIM_SET_COMPARE(&htim2, EXEMPLE_TIMER_PWM_CHANNEL, pulse_width++);
+	    __HAL_TIM_SET_COMPARE(&EXEMPLE_TIMER, EXEMPLE_TIMER_PWM_CHANNEL, pulse_width++);
         pulse_width %= 100;
 	    HAL_Delay(10);
     }
