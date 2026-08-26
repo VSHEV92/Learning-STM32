@@ -9,6 +9,12 @@
     #include "stm32f0xx_hal_gpio.h"
 #endif
 
+#ifdef STM32F303xC
+    #include "stm32f3xx_hal_dma.h"
+    #include "stm32f3xx_hal_spi.h"
+    #include "stm32f3xx_hal_gpio.h"
+#endif
+
 #ifdef STM32F411xE
     #include "stm32f4xx_hal_dma.h"
     #include "stm32f4xx_hal_spi.h"
