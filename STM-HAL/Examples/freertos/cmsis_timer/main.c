@@ -4,7 +4,7 @@
 osThreadId_t blink_taskHandle;
 const osThreadAttr_t blink_task_attributes = {
     .name = "blink_task",
-    .stack_size = 1024 * 4,
+    .stack_size = 256 * 4,
     .priority = (osPriority_t) osPriorityNormal,
 };
 void blink_task_func(void *argument);

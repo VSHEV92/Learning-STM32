@@ -33,7 +33,7 @@ void main() {
     xTaskCreate(
         blink_thread,     // called function
         "blink_task",     // human readable name
-        1024,             // stack size
+        256,              // stack size
         NULL,             // task function parameter (void*)
         1,                // task priority
         NULL              // task handler
