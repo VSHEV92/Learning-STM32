@@ -38,6 +38,11 @@ LDFLAGS += -nodefaultlibs
 LDFLAGS += -T Common/link.ld
 LDFLAGS += -Wl,-Map=$(MAP_NAME)
 
+# Objdump sections
+OBJDUMP_SECTIONS += -j .isr_vector
+OBJDUMP_SECTIONS += -j .text
+OBJDUMP_SECTIONS += -j .data
+
 # Targets
 all: clean objdump run
 
@@ -45,7 +50,7 @@ $(EXECUTABLE_NAME): $(SRC)
 	$(CROSS_COMPILE)gcc $(CFLAGS) $(LDFLAGS) -o $@ $(SRC)
 
 objdump: $(EXECUTABLE_NAME)
-	$(CROSS_COMPILE)objdump -d $(EXECUTABLE_NAME) > $(OBJDUMP_NAME)
+	$(CROSS_COMPILE)objdump -D $(OBJDUMP_SECTIONS) $(EXECUTABLE_NAME) > $(OBJDUMP_NAME)
 
 run: $(EXECUTABLE_NAME)
 	gdb-multiarch $(EXECUTABLE_NAME) -x Common/gdbinit $(GDB_COMMANS)

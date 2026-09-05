@@ -4,6 +4,7 @@
 .global _end_of_stack
 .global Reset_Handler
 
+
 /*
  *      ISR Vector
  */
@@ -24,6 +25,7 @@
  // interwork to Thumb mode.
 
 .section .text.isr_handlers
+.type  Reset_Handler, %function
 Reset_Handler:  
     b main
 
