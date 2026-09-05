@@ -9,6 +9,7 @@ include $(example)/config.mk
 
 EXECUTABLE_NAME := $(example).elf
 OBJDUMP_NAME := $(example).dump
+MAP_NAME := $(example).map
 
 
 # Toolchain
@@ -26,6 +27,8 @@ CFLAGS += -g3
 CFLAGS += -ffreestanding
 CFLAGS += -fno-builtin
 
+CFLAGS += -Wall
+CFLAGS += -Werror
 
 # Linker flags
 LDFLAGS += -nostartfiles
@@ -33,7 +36,7 @@ LDFLAGS += -nostdlib
 LDFLAGS += -nodefaultlibs
 
 LDFLAGS += -T Common/link.ld
-
+LDFLAGS += -Wl,-Map=$(MAP_NAME)
 
 # Targets
 all: clean objdump run
@@ -49,6 +52,8 @@ run: $(EXECUTABLE_NAME)
 
 clean:
 	rm -rf $(EXECUTABLE_NAME)
+	rm -rf $(OBJDUMP_NAME)
+	rm -rf $(MAP_NAME)
 
 .PHONY: clean objdump run
 

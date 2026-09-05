@@ -1,13 +1,16 @@
 .syntax unified
 .thumb
 
+.global _end_of_stack
+.global Reset_Handler
 
 /*
  *      ISR Vector
  */
-.section .isr_vector
-  .word  _end_of_stack   // Main Stack Pointer (MSP)
-  .word  Reset_Handler   // Reset Vector Handler
+
+.section .isr_vector, "a"
+    .word  _end_of_stack   // Main Stack Pointer (MSP)
+    .word  Reset_Handler   // Reset Vector Handler
 
 
 
@@ -21,24 +24,36 @@
  // interwork to Thumb mode.
 
 .section .text.isr_handlers
-.global Reset_Handler
-//.type  Reset_Handler, %function  
 Reset_Handler:  
     b main
 
 
-// Simple counter from 10 to 0
-// R0 - counter register
-
+// Main code perform two things:
+//   1. Read IPSR and CONTROL register
+//   2. Read SP register
+//   2. Create an infinite downcounter
 .section .text.main
 main:
+    // Read IPSR. Check that it's value is Zero (Thread Mode)
+    mrs r0, IPSR
+
+    // Read CONTROL. 
+    // Check nPRIV bit is Zero (Privileged Level).
+    // Check SPSEL bit is Zero (Main Stack Pointer).
+    mrs r0, CONTROL
+
+    // Read SP register. Check, that it set to top of RAM.
+    mrs r0, msp
+
+    // Simple counter from 10 to 0
+    // R0 - counter register
+cnt_init:
     movs r0, #10
 
-loop:
+cnt_loop:
     subs r0, r0, #1
-    cmp r0, #0
-    bne loop
+    bne cnt_loop
 
-    b main
+    b cnt_init
     
     
