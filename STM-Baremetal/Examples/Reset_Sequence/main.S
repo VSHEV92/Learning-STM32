@@ -1,6 +1,11 @@
+// Use Unified Assembly Language (UAL)
+// Now we can code in assambly for ARM and Thumb sets 
 .syntax unified
+
+// Next code is for Thumb instruction Set
 .thumb
 
+// Global lables
 .global _end_of_stack
 .global Reset_Handler
 
@@ -9,6 +14,8 @@
  *      ISR Vector
  */
 
+// "a" - acllocatable flag for linker.
+// Without it linker through away this section
 .section .isr_vector, "a"
     .word  _end_of_stack   // Main Stack Pointer (MSP)
     .word  Reset_Handler   // Reset Vector Handler
