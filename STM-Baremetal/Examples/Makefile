@@ -37,6 +37,7 @@ LDFLAGS += -nodefaultlibs
 
 LDFLAGS += -T Common/link.ld
 LDFLAGS += -Wl,-Map=$(MAP_NAME)
+LDFLAGS += -Wl,--gc-sections
 
 # Objdump sections
 OBJDUMP_SECTIONS += -j .isr_vector
