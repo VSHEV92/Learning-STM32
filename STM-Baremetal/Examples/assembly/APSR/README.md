@@ -16,7 +16,7 @@ This example show what is **APSR** register and explain all it's flags. We show 
 ### How to Run
 
 ```
- make example=Reset_Sequence
+ make example=assembly/Reset_Sequence
 ```
 
 ------

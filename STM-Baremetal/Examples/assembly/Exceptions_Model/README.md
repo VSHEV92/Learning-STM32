@@ -11,7 +11,7 @@ This example show how exception entry and return work in ARM processors. We look
 ### How to Run
 
 ```
- make example=Exception_Model
+ make example=assembly/Exception_Model
 ```
 
 ------
