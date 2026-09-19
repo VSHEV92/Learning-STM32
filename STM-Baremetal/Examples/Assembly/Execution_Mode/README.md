@@ -11,7 +11,7 @@ This example show what is Thread and Handler Modes. **Thread Mode** is normal ex
 ### How to Run
 
 ```
- make example=assembly/Execution_Mode
+ make example=Assembly/Execution_Mode
 ```
 
 ------

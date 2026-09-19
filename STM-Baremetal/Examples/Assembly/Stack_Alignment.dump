@@ -1,0 +1,34 @@
+
+Assembly/Stack_Alignment.elf:     file format elf32-littlearm
+
+
+Disassembly of section .isr_vector:
+
+08000000 <_end_of_stack-0x18001800>:
+ 8000000:	20001800 	andcs	r1, r0, r0, lsl #16
+ 8000004:	08000031 	stmdaeq	r0, {r0, r4, r5}
+	...
+ 800002c:	08000033 	stmdaeq	r0, {r0, r1, r4, r5}
+
+Disassembly of section .text:
+
+08000030 <Reset_Handler>:
+ 8000030:	e003      	b.n	800003a <main>
+
+08000032 <SVC_Handler>:
+ 8000032:	f3ef 8008 	mrs	r0, MSP
+ 8000036:	9807      	ldr	r0, [sp, #28]
+ 8000038:	4770      	bx	lr
+
+0800003a <main>:
+ 800003a:	f3ef 8008 	mrs	r0, MSP
+ 800003e:	df00      	svc	0
+ 8000040:	f3ef 8008 	mrs	r0, MSP
+ 8000044:	b401      	push	{r0}
+ 8000046:	f3ef 8008 	mrs	r0, MSP
+ 800004a:	df00      	svc	0
+ 800004c:	f3ef 8008 	mrs	r0, MSP
+
+08000050 <busy_loop>:
+ 8000050:	46c0      	nop			@ (mov r8, r8)
+ 8000052:	e7fd      	b.n	8000050 <busy_loop>

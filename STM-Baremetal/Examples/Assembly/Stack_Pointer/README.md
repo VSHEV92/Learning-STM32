@@ -11,7 +11,7 @@ This example show how stack pointer can be used. We start by using MSP, Then we 
 ### How to Run
 
 ```
- make example=assembly/Stack_Pointer
+ make example=Assembly/Stack_Pointer
 ```
 
 ------
