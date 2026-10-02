@@ -9,21 +9,23 @@ MEMORY
 SECTIONS
 {
     
-    _end_of_stack = ORIGIN(RAM) + LENGTH(RAM);
 
     .isr_vector :
     {
+      . = ALIGN(4);  
       KEEP(*(.isr_vector))
     } >FLASH
   
     .text :
     {
+      . = ALIGN(4);  
       *(.text)
       *(.text*)
     } >FLASH
   
     .rodata :
     {
+      . = ALIGN(4);  
       *(.rodata)
       *(.rodata*)
     } >FLASH
@@ -31,6 +33,7 @@ SECTIONS
   
     .data :
     {
+      . = ALIGN(4);  
       _start_of_data = .;
       *(.data)
       *(.data*)
@@ -39,12 +42,15 @@ SECTIONS
   
     .bss :
     {
+      . = ALIGN(4);  
       _start_of_bss = .;
       *(.bss)
       *(.bss*)
       _end_of_bss = .;
     } >RAM
 
+    _start_of_flash_data = LOADADDR(.data);
+    _end_of_stack = ORIGIN(RAM) + LENGTH(RAM);
 
 }
 
