@@ -11,7 +11,7 @@ This example show what happens with processor under Reset Handler. This example 
 ### How to Run
 
 ```
- make example=CMSIS/Reset_Sequence
+ make example=CMSIS-Core/Reset_Sequence
 ```
 
 ------
