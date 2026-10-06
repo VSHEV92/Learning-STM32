@@ -35,11 +35,18 @@ CFLAGS += -Wall
 CFLAGS += -Werror
 
 # Linker flags
+ifdef MCU
+LDFLAGS += --specs=nano.specs 
+LDFLAGS += --specs=nosys.specs
+LDFLAGS += -T Common/link_$(MCU).ld
+DEFINES += -D$(MCU)
+else
 LDFLAGS += -nostartfiles
 LDFLAGS += -nostdlib
 LDFLAGS += -nodefaultlibs
-
 LDFLAGS += -T Common/link.ld
+endif
+
 LDFLAGS += -Wl,-Map=$(MAP_NAME)
 LDFLAGS += -Wl,--gc-sections
 
@@ -52,14 +59,20 @@ OBJDUMP_SECTIONS += -j .data
 all: clean third_party objdump run
 
 $(EXECUTABLE_NAME): $(SRC)
-	$(CROSS_COMPILE)gcc $(CFLAGS) $(LDFLAGS) $(INC) -o $@ $(SRC)
+	$(CROSS_COMPILE)gcc $(CFLAGS) $(LDFLAGS) $(DEFINES) $(INC) -o $@ $(SRC)
 
 objdump: $(EXECUTABLE_NAME)
 	$(CROSS_COMPILE)objdump -D $(OBJDUMP_SECTIONS) $(EXECUTABLE_NAME) > $(OBJDUMP_NAME)
 	gcc-mapfile-tool $(MAP_NAME) --output=$(MAP_PARSE_NAME) --format=html --sortby=length --order=desc
 
 run: $(EXECUTABLE_NAME)
-	gdb-multiarch $(EXECUTABLE_NAME) -x Common/gdbinit $(GDB_COMMANS)
+	gdb-multiarch $(EXECUTABLE_NAME) -x Common/gdbinit_load $(GDB_COMMANS)
+
+connect: $(EXECUTABLE_NAME)
+	gdb-multiarch $(EXECUTABLE_NAME) -x Common/gdbinit_connect
+
+flash: clean third_party objdump
+	openocd -f interface/stlink.cfg -f target/stm32f0x.cfg -c "program $(EXECUTABLE_NAME) verify reset exit"
 
 clean:
 	rm -rf $(EXECUTABLE_NAME)
@@ -70,6 +83,7 @@ clean:
 third_party:
 	mkdir third_party
 	cd third_party; git clone https://github.com/ARM-software/CMSIS_6.git
+	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-f0.git
 
-.PHONY: clean objdump run
+.PHONY: clean objdump run flash
 
