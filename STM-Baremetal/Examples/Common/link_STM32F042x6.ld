@@ -159,11 +159,11 @@ SECTIONS
   {
     . = ALIGN(4);
     __copy_table_start__ = .;
-
+/*
     LONG (LOADADDR(.data))
     LONG (ADDR(.data))
     LONG (SIZEOF(.data) / 4)
-
+*/
     /* Add each additional data section here */
 /*
     LONG (LOADADDR(.data2))

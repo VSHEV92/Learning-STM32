@@ -5,8 +5,11 @@
 #define GPIO_OUTPUT_MODE 0b01 
 #define GPIO_NO_PULLUP_DOWN 0b00
 
-#define DELAY 400000
 
+// SysTick Handler
+void SysTick_Handler() {
+    GPIOB->ODR ^= GPIO_ODR_3;
+}
 
 
 void main() {
@@ -22,15 +25,13 @@ void main() {
     // Disable pullup/pulldown for LED Pin 
     WRITE_REG_FIELD(GPIOB->PUPDR, GPIO_PUPDR_PUPDR3, GPIO_NO_PULLUP_DOWN);
 
-    // Toggle LED
-    while(1) {
-        GPIOB->ODR |= GPIO_ODR_3;
-        for(volatile int i = 0; i < DELAY; i++) {}
+    // Configure SysTick to fire every 500 ms
+    SysTick_Config( SystemCoreClock/2 );
+    
+    // Set Sleep-On-Exit bit
+    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
-        GPIOB->ODR &= ~GPIO_ODR_3;
-        for(volatile int i = 0; i < DELAY; i++) {}
-    }
-
-
+    // Wait for interrupt
+    __WFI();
     
 }
