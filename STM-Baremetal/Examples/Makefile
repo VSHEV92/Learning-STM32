@@ -63,7 +63,6 @@ $(EXECUTABLE_NAME): $(SRC)
 
 objdump: $(EXECUTABLE_NAME)
 	$(CROSS_COMPILE)objdump -D $(OBJDUMP_SECTIONS) $(EXECUTABLE_NAME) > $(OBJDUMP_NAME)
-	gcc-mapfile-tool $(MAP_NAME) --output=$(MAP_PARSE_NAME) --format=html --sortby=length --order=desc
 
 run: $(EXECUTABLE_NAME)
 	gdb-multiarch $(EXECUTABLE_NAME) -x Common/gdbinit_load $(GDB_COMMANS)
@@ -73,6 +72,15 @@ connect: $(EXECUTABLE_NAME)
 
 flash: clean third_party objdump
 	openocd -f interface/stlink.cfg -f target/stm32f0x.cfg -c "program $(EXECUTABLE_NAME) verify reset exit"
+
+size: $(EXECUTABLE_NAME)
+	gcc-mapfile-tool $(MAP_NAME) --output=$(MAP_PARSE_NAME) --format=html --sortby=length --order=desc
+	$(CROSS_COMPILE)size -A -d $(EXECUTABLE_NAME)
+	
+
+monitor:
+	pyserial-miniterm /dev/ttyACM0  9600
+
 
 clean:
 	rm -rf $(EXECUTABLE_NAME)
