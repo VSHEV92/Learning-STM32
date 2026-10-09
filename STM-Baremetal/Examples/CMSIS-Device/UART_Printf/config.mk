@@ -1,6 +1,8 @@
 # Used MCU
 MCU := STM32F042x6
 
+OPT := Release 
+
 # Sources
 SRC += $(EXAMPLE_DIR)/main.c
 SRC += $(THIRD_PARTY_DIR)/cmsis-device-f0/Source/Templates/system_stm32f0xx.c

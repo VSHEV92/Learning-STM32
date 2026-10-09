@@ -23,27 +23,28 @@ CFLAGS += -mthumb
 CFLAGS += -mcpu=cortex-m0
 CFLAGS += -mfloat-abi=soft
  
-CFLAGS += -O0
-CFLAGS += -g
- 
 CFLAGS += -ffreestanding
-CFLAGS += -fno-builtin
-
-CFLAGS += -ffunction-sections
 
 CFLAGS += -Wall
 CFLAGS += -Werror
 
+ifdef OPT
+CFLAGS += -Os
+CFLAGS += -ffunction-sections
+CFLAGS += -fdata-sections
+else
+CFLAGS += -O0
+CFLAGS += -g
+endif
+
 # Linker flags
-ifdef MCU
 LDFLAGS += --specs=nano.specs 
 LDFLAGS += --specs=nosys.specs
+
+ifdef MCU
 LDFLAGS += -T Common/link_$(MCU).ld
 DEFINES += -D$(MCU)
 else
-LDFLAGS += -nostartfiles
-LDFLAGS += -nostdlib
-LDFLAGS += -nodefaultlibs
 LDFLAGS += -T Common/link.ld
 endif
 
