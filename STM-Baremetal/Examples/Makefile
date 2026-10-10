@@ -85,6 +85,8 @@ size: $(EXECUTABLE_NAME)
 	# Print Section Size Summary
 	$(CROSS_COMPILE)size -A -d $(EXECUTABLE_NAME)
 
+puncover:
+	puncover --elf $(EXECUTABLE_NAME) --build-dir $(example)/..
 
 monitor:
 	pyserial-miniterm /dev/ttyACM0  9600
