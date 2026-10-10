@@ -33,7 +33,10 @@ CFLAGS += -Os
 CFLAGS += -ffunction-sections
 CFLAGS += -fdata-sections
 CFLAGS += -fstack-usage
+CFLAGS += -fdump-rtl-expand
 else
+CFLAGS += -fstack-usage
+CFLAGS += -fdump-rtl-expand
 CFLAGS += -O0
 CFLAGS += -g
 endif
@@ -76,9 +79,12 @@ flash: clean third_party objdump
 	openocd -f interface/stlink.cfg -f target/stm32f0x.cfg -c "program $(EXECUTABLE_NAME) verify reset exit"
 
 size: $(EXECUTABLE_NAME)
+	# MAP file as HTML
 	gcc-mapfile-tool $(MAP_NAME) --output=$(MAP_PARSE_NAME) --format=html --sortby=length --order=desc
+
+	# Print Section Size Summary
 	$(CROSS_COMPILE)size -A -d $(EXECUTABLE_NAME)
-	
+
 
 monitor:
 	pyserial-miniterm /dev/ttyACM0  9600
@@ -90,11 +96,14 @@ clean:
 	rm -rf $(MAP_NAME)
 	rm -rf $(MAP_PARSE_NAME)
 	rm -rf ./*/*.su
+	rm -rf ./*/*.expand
 
 third_party:
 	mkdir third_party
 	cd third_party; git clone https://github.com/ARM-software/CMSIS_6.git
 	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-f0.git
+	cd third_party; git clone https://github.com/STMicroelectronics/stm32f0xx-hal-driver.git
+	
 
 .PHONY: clean objdump run flash
 
