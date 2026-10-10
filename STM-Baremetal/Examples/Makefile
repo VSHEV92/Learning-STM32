@@ -32,6 +32,7 @@ ifdef OPT
 CFLAGS += -Os
 CFLAGS += -ffunction-sections
 CFLAGS += -fdata-sections
+CFLAGS += -fstack-usage
 else
 CFLAGS += -O0
 CFLAGS += -g
@@ -88,6 +89,7 @@ clean:
 	rm -rf $(OBJDUMP_NAME)
 	rm -rf $(MAP_NAME)
 	rm -rf $(MAP_PARSE_NAME)
+	rm -rf ./*/*.su
 
 third_party:
 	mkdir third_party
