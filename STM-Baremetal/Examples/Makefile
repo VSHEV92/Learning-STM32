@@ -105,6 +105,7 @@ third_party:
 	cd third_party; git clone https://github.com/ARM-software/CMSIS_6.git
 	cd third_party; git clone https://github.com/STMicroelectronics/cmsis-device-f0.git
 	cd third_party; git clone https://github.com/STMicroelectronics/stm32f0xx-hal-driver.git
+	cd third_party; git clone https://github.com/FreeRTOS/FreeRTOS-Kernel.git
 	
 
 .PHONY: clean objdump run flash
