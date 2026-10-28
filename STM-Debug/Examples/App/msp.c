@@ -1,6 +1,7 @@
 #include <stm32f0xx.h>
 
 UART_HandleTypeDef huart2;
+TIM_HandleTypeDef  htim14;
 
 void HAL_MspInit(void) {
 
@@ -26,6 +27,20 @@ void HAL_MspInit(void) {
     huart2.Init.HwFlowCtl    = UART_HWCONTROL_NONE;    // don't use hardware flow control
     huart2.Init.OverSampling = UART_OVERSAMPLING_16;   // set oversampling to 16 bits  
     HAL_UART_Init(&huart2);
+
+
+    __HAL_RCC_TIM14_CLK_ENABLE();
+
+    htim14.Instance = TIM14;
+    htim14.Init.Period = 8000;
+    htim14.Init.Prescaler = 3000;
+    htim14.Init.CounterMode = TIM_COUNTERMODE_UP;
+
+    HAL_TIM_Base_Init(&htim14);
+    HAL_TIM_Base_Start_IT(&htim14);
+
+    HAL_NVIC_EnableIRQ(TIM14_IRQn);
+
 }
 
 void HAL_UART_MspInit(UART_HandleTypeDef *huart) {

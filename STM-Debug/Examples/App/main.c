@@ -5,12 +5,15 @@
 #include <FreeRTOS.h>
 #include <task.h>
 #include <timers.h>
+#include <semphr.h>
 
 void blink_thread(void *argument);
 void hello_world_thread(void *argument);
+void notified_thread(void *argument);
 void timer_cb(TimerHandle_t xTimer);
 
 TimerHandle_t autoreload_timer;
+SemaphoreHandle_t semaphore;
 
 void main() {
 
@@ -34,6 +37,14 @@ void main() {
         NULL                    // task handler
     );
 
+    xTaskCreate(
+        notified_thread,        // called function
+        "notified_task",        // human readable name
+        128,                    // stack size
+        NULL,                   // task function parameter (void*)
+        2,                      // task priority
+        NULL                    // task handler
+    );
 
     autoreload_timer = xTimerCreate (
         "Timer",                  // human readable timer name
@@ -47,6 +58,8 @@ void main() {
         autoreload_timer,     // timer handler
         portMAX_DELAY         // max delay for waiting until command send to deamon command queue
     );
+
+    semaphore = xSemaphoreCreateBinary();
 
     vTaskStartScheduler();
 
@@ -69,6 +82,15 @@ void hello_world_thread(void *argument) {
     for(;;) {
         printf("Hello World\n");
         vTaskDelay( pdMS_TO_TICKS(1000) );
+    }
+}
+
+
+// Notified Thread Function
+void notified_thread(void *argument) {
+    for(;;) {
+        xSemaphoreTake(semaphore, portMAX_DELAY);
+        printf("Task was notified\n");
     }
 }
 
