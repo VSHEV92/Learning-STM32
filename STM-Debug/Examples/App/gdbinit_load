@@ -1,0 +1,10 @@
+set $interface = "interface/stlink.cfg"
+set $target = "target/stm32f0x.cfg"
+
+eval "target extended-remote | openocd -f %s -f %s -c 'gdb_port pipe'", $interface, $target
+
+monitor reset halt
+load
+
+
+
