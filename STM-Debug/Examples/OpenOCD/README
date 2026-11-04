@@ -1,0 +1,11 @@
+To run TCL scripts:
+
+1. Create app.elf by calling make in App folder
+
+2. Start OpenOCD:
+    openocd -f board/st_nucleo_f0.cfg -c "program ../App/app.elf verify" &
+
+3. Connect to OpenOCD using Telnet
+    telnet localhost 4444
+
+4. Run script using source command
