@@ -1,4 +1,3 @@
-
 # Run OpenOCD with Nucloe F0 board configuration
 # Configure OpenOCD GDB port in pipe mode (not socket mode)
 # Connect to remote target using OpenOCD pipe
