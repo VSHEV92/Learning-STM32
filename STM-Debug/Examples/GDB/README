@@ -1,0 +1,7 @@
+To run GBD example:
+
+1. Run command: 
+    gdb-multiarch "executable_name.elf" -x "script_name.gdb"
+
+
+
