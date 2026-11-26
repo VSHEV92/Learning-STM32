@@ -1,0 +1,16 @@
+// Setup MCU
+Device STM32F091RC
+
+// Setup Transport interface
+SelectInterface SWD
+
+// Set interface speed in KHz
+Speed 4000
+
+// Connect to device
+Connect
+
+// Halt and Reset MCU
+Halt
+Reset
+

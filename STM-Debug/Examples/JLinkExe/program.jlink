@@ -1,0 +1,29 @@
+// Setup MCU
+Device STM32F091RC
+
+// Setup Debug interface
+SelectInterface SWD
+Speed 4000
+
+// Connect to device
+Connect
+
+// Halt MCU
+Halt
+
+// Erase Flash memory
+Erase
+
+// Load Image
+LoadFile ../App/app.elf
+
+// Reset MCU
+Reset
+
+// Start and quit MCU
+Go
+Quit
+
+
+
+
